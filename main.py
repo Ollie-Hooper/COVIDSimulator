@@ -42,6 +42,7 @@ def main(*args):
     simulation.infect_randomly(args.cases)
 
     # Plot or animation?
+    import matplotlib as plt
     if args.plot:
         fig = plot_simulation(simulation, args.duration)
 

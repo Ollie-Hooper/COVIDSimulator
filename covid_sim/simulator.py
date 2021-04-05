@@ -93,6 +93,12 @@ class Person:
             self.recovery_probability = 0.7
             self.infected_probability = 0.4
             self.death_probability = 0.001
+        elif self.age < 60:
+            self.recovery_probability = 0.7
+            self.infected_probability = 0.4
+            self.death_probability = 0.005
+            
+            
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

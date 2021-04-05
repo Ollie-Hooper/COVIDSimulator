@@ -70,6 +70,30 @@ from numpy.random import random, randint
 # and init() methods.
 
 
+SUSCEPTIBLE = 0
+INFECTED = 1
+RECOVERED = 2
+DEAD = 3
+
+
+#  Person class
+
+class Person:
+
+    def __init__(self):
+        self.state = SUSCEPTIBLE
+        self.age = randint(0, 100)
+
+    def set_probabilities(self):
+        if self.age < 20:
+            self.recovery_probability = 0.7
+            self.infected_probability = 0.4
+            self.death_probability = 0.001
+        elif self.age < 40:
+            self.recovery_probability = 0.7
+            self.infected_probability = 0.4
+            self.death_probability = 0.001
+
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #
 # ----------------------------------------------------------------------------#

@@ -204,8 +204,8 @@ class Simulation:
 
         # Initialise Population (everyone susceptible with range of ages assigned to each element)
         self.pop = np.zeros((width, height), dtype=Person)
-        for i in range(self.pop):
-            for j in range(self.pop[i]):
+        for i in range(len(self.pop)):
+            for j in range(len(self.pop[i])):
                 self.pop[i, j] = Person()
 
     def infect_randomly(self, num):

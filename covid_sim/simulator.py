@@ -198,9 +198,9 @@ class Simulation:
         self.death_probability = death
 
         # Initialise Population (everyone susceptible with range of ages assigned to each element)
-        self.pop = np.array((width, height), int)
-        for i in self.pop:
-            for j in self.pop:
+        self.pop = np.zeros(width, height), int)
+        for i in range(self.pop):
+            for j in range(self.pop[i]):
                 self.pop[i, j] = Person()
 
     def infect_randomly(self, num):

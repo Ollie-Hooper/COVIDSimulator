@@ -169,24 +169,28 @@ class Simulation:
     INFECTED = 1
     RECOVERED = 2
     DEAD = 3
+    VACCINATED = 4
 
     STATUSES = {
         'susceptible': SUSCEPTIBLE,
         'infected': INFECTED,
         'recovered': RECOVERED,
         'dead': DEAD,
+        'vaccinated': VACCINATED
     }
     COLOURMAP = {
-        'susceptible': 'green',
+        'susceptible': 'yellow',
         'infected': 'red',
         'recovered': 'blue',
         'dead': 'black',
+        'vaccinated': 'green'
     }
     COLOURMAP_RGB = {
         'red': (255, 0, 0),
         'green': (0, 255, 0),
         'blue': (0, 0, 255),
         'black': (0, 0, 0),
+        'yellow': (255, 255, 0),
     }
 
     def __init__(self, width, height, recovery, infection, death):

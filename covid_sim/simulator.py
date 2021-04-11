@@ -35,7 +35,6 @@ must also be on PATH.
 import numpy as np
 from numpy.random import random, randint
 
-
 # ----------------------------------------------------------------------------#
 #                   Class design                                              #
 # ----------------------------------------------------------------------------#
@@ -82,7 +81,8 @@ class Person:
 
     def __init__(self):
         self.state = SUSCEPTIBLE
-        self.age = randint(0, 100)
+        self.age = random.choice(
+            np.random.choice([range(0, 20), range(21, 40), range(41, 70), range(70, 100)], p=[0.2, 0.3, 0.35, 0.15]))
 
     def set_probabilities(self):
         if self.age < 20:
@@ -97,8 +97,7 @@ class Person:
             self.recovery_probability = 0.7
             self.infected_probability = 0.4
             self.death_probability = 0.005
-            
-            
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

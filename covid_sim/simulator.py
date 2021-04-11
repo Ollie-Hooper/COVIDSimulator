@@ -100,6 +100,9 @@ class Person:
             self.infected_probability = 0.4
             self.death_probability = 0.005
 
+    def set_state(self, state):
+        self.state = state
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

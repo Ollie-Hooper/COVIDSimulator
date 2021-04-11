@@ -82,8 +82,10 @@ class Person:
     def __init__(self):
         self.state = SUSCEPTIBLE
         self.age = random.choice(
-            random.choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)], p=[0.22, 0.12, 0.31, 0.22, 0.13])
-#probabilities of age based on age group
+            random.choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
+                          p=[0.22, 0.12, 0.31, 0.22, 0.13]))
+
+    # probabilities of age based on age group
     def set_probabilities(self):
         if self.age < 20:
             self.recovery_probability = 0.7

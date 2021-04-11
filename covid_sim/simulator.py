@@ -197,9 +197,11 @@ class Simulation:
         self.infection_probability = infection
         self.death_probability = death
 
-        # Initial state (everyone susceptible)
-        self.state = np.zeros((width, height), int)
-        self.state[:, :] = self.SUSCEPTIBLE
+        # Initialise Population (everyone susceptible with range of ages assigned to each element)
+        self.pop = np.array((width, height), int)
+        for i in self.pop:
+            for j in self.pop:
+                self.pop[i, j] = Person()
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

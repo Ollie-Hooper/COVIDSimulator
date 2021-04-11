@@ -40,7 +40,7 @@ def main(*args):
     simulation = Simulation(args.size, args.size,
                             args.recovery, args.infection, args.death)
     simulation.infect_randomly(args.cases)
-
+"""Testing that this works"""
     # Plot or animation?
     import matplotlib as plt
     if args.plot:

@@ -97,7 +97,15 @@ class Person:
             self.recovery_probability = 0.7
             self.infected_probability = 0.4
             self.death_probability = 0.005
-            
+
+
+# Vaccination class
+class Vaccinator:
+    def __init__(self, start_time = 100, vaccination_rate = 10):
+        self.start_time = start_time #day the vaccine begins to be distributed
+        self.vaccination_rate = vaccination_rate #how many people vaccinated each day
+    
+
             
 
 # ----------------------------------------------------------------------------#
@@ -170,6 +178,7 @@ class Simulation:
     RECOVERED = 2
     DEAD = 3
     VACCINATED = 4
+    
 
     STATUSES = {
         'susceptible': SUSCEPTIBLE,

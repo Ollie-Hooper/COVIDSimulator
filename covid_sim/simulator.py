@@ -225,7 +225,8 @@ class Simulation:
             # NOTE: This might select the same person twice...
             i = randint(self.width)
             j = randint(self.height)
-            self.state[i, j] = self.INFECTED
+            self.pop[i, j] = .set_state(state)
+            
 
     def update(self):
         """Advance the simulation by one day"""

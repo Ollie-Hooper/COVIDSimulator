@@ -74,6 +74,7 @@ SUSCEPTIBLE = 0
 INFECTED = 1
 RECOVERED = 2
 DEAD = 3
+VACCINATED = 4
 
 
 #  Person class
@@ -104,8 +105,9 @@ class Vaccinator:
     def __init__(self, start_time = 100, vaccination_rate = 10):
         self.start_time = start_time #day the vaccine begins to be distributed
         self.vaccination_rate = vaccination_rate #how many people vaccinated each day
-        [(i, j) for i in range(len(self.state)) for j in range(len(self.state[i])) if self.state[i, j] == SUSCEPTIBLE or self.state[i, j] == RECOVERED]
-
+    def vaccinate(self):
+       eligibletovaccinate  [(i, j) for i in range(len(self.state)) for j in range(len(self.state[i])) if self.state[i, j] == SUSCEPTIBLE or self.state[i, j] == RECOVERED]
+    
             
 
 # ----------------------------------------------------------------------------#

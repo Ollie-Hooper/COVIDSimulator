@@ -222,6 +222,8 @@ class Simulation:
         self.state = np.zeros((width, height), int)
         self.state[:, :] = self.SUSCEPTIBLE
 
+        self.vaccinator = Vaccinator()
+
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""
         for n in range(num):
@@ -236,6 +238,7 @@ class Simulation:
         # Use a copy of the old state to store the new state so that e.g. if
         # someone recovers but was infected yesterday their neighbours might
         # still become infected today.
+        self.vaccinator.vaccinate()
         old_state = self.state
         new_state = old_state.copy()
         for i in range(self.width):

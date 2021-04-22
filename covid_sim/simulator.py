@@ -34,6 +34,7 @@ must also be on PATH.
 
 import numpy as np
 from numpy.random import random, randint
+from random import choices
 
 
 # ----------------------------------------------------------------------------#
@@ -102,13 +103,17 @@ class Person:
 
 # Vaccination class
 class Vaccinator:
-    def __init__(self, start_time = 100, vaccination_rate = 10):
+    def __init__(self, state, start_time=100, vaccination_rate=10):
+        self.state = state
         self.start_time = start_time #day the vaccine begins to be distributed
         self.vaccination_rate = vaccination_rate #how many people vaccinated each day
+
     def vaccinate(self):
-       eligibletovaccinate  [(i, j) for i in range(len(self.state)) for j in range(len(self.state[i])) if self.state[i, j] == SUSCEPTIBLE or self.state[i, j] == RECOVERED]
-    
-            
+        eligible_to_vaccinate = [(i, j) for i in range(len(self.state)) for j in range(len(self.state[i])) if self.state[i, j] == SUSCEPTIBLE or self.state[i, j] == RECOVERED]
+        people_to_vaccinate = choices(eligible_to_vaccinate, k=self.vaccination_rate)
+        for i, j in people_to_vaccinate:
+            self.state[i, j] = VACCINATED
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

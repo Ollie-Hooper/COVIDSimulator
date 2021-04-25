@@ -79,34 +79,35 @@ DEAD = 3
 
 class Person:
 
-    def __init__(self):
-        self.state = SUSCEPTIBLE
-        self.age = random.choice(
-            random.choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
+    def __init__(self, infection_length=14):
+        self.status = SUSCEPTIBLE
+        self.infection_length = infection_length
+        self.age = random.choice(random.choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
                           p=[0.22, 0.12, 0.31, 0.22, 0.13]))
+        
 
     # probabilities of age based on age group
     def set_probabilities(self):
         if self.age < 50:
-            self.recovery_probability = 0.7
-            self.infected_probability = 0.4
-            self.death_probability = 0.01
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.01 / self.infection_length
         elif self.age < 60:
-            self.recovery_probability = 0.7
-            self.infected_probability = 0.4
-            self.death_probability = 0.02
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.02 / self.infection_length
         elif self.age < 70:
-            self.recovery_probability = 0.7             
-            self.infected_probability = 0.4             #Death statistics based off covid related data on mortality rates of different ages
-            self.death_probability = 0.04
+            self.recovery_probability = 0.7  / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length             #Death statistics based off covid related data on mortality rates of different ages
+            self.death_probability = 0.04 / self.infection_length
         elif self.age < 80:
-            self.recovery_probability = 0.7
-            self.infected_probability = 0.4
-            self.death_probability = 0.08
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.08 / self.infection_length
         elif self.age <= 100:
-            self.recovery_probability = 0.7
-            self.infected_probability = 0.4
-            self.death_probability = 0.15
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.15 / self.infection_length
 
     def set_state(self, state):
         self.state = state

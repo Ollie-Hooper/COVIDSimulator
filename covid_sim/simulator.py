@@ -109,7 +109,7 @@ class Person:
             self.infected_probability = 0.4 / self.infection_length
             self.death_probability = 0.15 / self.infection_length
 
-    def set_state(self, status):
+    def set_status(self, status):
         self.status = status
         
         

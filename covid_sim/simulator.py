@@ -234,12 +234,12 @@ class Simulation:
         # Use a copy of the old state to store the new state so that e.g. if
         # someone recovers but was infected yesterday their neighbours might
         # still become infected today.
-        old_state = self.state
-        new_state = old_state.copy()
+        old_pop = self.pop
+        new_pop = old_pop.copy()
         for i in range(self.width):
             for j in range(self.height):
-                new_state[i, j] = self.get_new_status(old_state, i, j)
-        self.state = new_state
+                new_pop[i, j] = self.get_new_status(old_pop, i, j)
+        self.state = new_pop
         self.day += 1
 
     def get_new_status(self, state, i, j):

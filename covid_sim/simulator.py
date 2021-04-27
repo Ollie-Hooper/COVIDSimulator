@@ -109,8 +109,8 @@ class Person:
             self.infected_probability = 0.4 / self.infection_length
             self.death_probability = 0.15 / self.infection_length
 
-    def set_state(self, state):
-        self.state = state
+    def set_state(self, status):
+        self.status = status
         
         
 
@@ -226,7 +226,7 @@ class Simulation:
             # NOTE: This might select the same person twice...
             i = randint(self.width)
             j = randint(self.height)
-            self.pop[i, j] = .set_state(state)
+            self.pop[i, j].set_status(self.INFECTED)
             
 
     def update(self):

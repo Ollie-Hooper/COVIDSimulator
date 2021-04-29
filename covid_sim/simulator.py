@@ -238,29 +238,26 @@ class Simulation:
         new_pop = old_pop.copy()
         for i in range(self.width):
             for j in range(self.height):
-                new_pop[i, j] = self.get_new_status(old_pop, i, j)
+                self.set_new_status(old_pop, i, j)
         self.state = new_pop
         self.day += 1
 
-    def get_new_status(self, state, i, j):
+    def set_new_status(self, pop, i, j):
         """Compute new status for person at i, j in the grid"""
-        status = state[i, j]
+        person = pop[i, j]
 
         # Update infected person
-        if status == self.INFECTED:
-            if self.recovery_probability > random():
-                return self.RECOVERED
-            elif self.death_probability > random():
-                return self.DEAD
+        if person.status == self.INFECTED:
+            if person.recovery_probability > random():
+                person.set_status(self.RECOVERED)
+            elif person.death_probability > random():
+                person.set_status(self.DEAD)
 
         # Update susceptible person
-        elif status == self.SUSCEPTIBLE:
-            num = self.num_infected_around(state, i, j)
+        elif person.status == self.SUSCEPTIBLE:
+            num = self.num_infected_around(pop, i, j)
             if num * self.infection_probability > random():
-                return self.INFECTED
-
-        # Return the old status (e.g. DEAD/RECOVERED)
-        return status
+                person.set_status(self.INFECTED)
 
     def num_infected_around(self, state, i, j):
         """Count the number of infected people around person i, j"""

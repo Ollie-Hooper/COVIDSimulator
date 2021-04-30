@@ -259,7 +259,7 @@ class Simulation:
             if num * self.infection_probability > random():
                 person.set_status(self.INFECTED)
 
-    def num_infected_around(self, state, i, j):
+    def num_infected_around(self, pop, i, j):
         """Count the number of infected people around person i, j"""
 
         # Need to be careful about people at the edge of the grid.
@@ -271,7 +271,7 @@ class Simulation:
             for jp in jvals:
                 # Don't count self as a neighbour
                 if (ip, jp) != (i, j):
-                    if state[ip, jp] == self.INFECTED:
+                    if pop[ip, jp].status == self.INFECTED:
                         number += 1
 
         return number

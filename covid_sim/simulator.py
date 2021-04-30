@@ -103,14 +103,24 @@ class Person:
 
 # Vaccination class
 class Vaccinator:
-    def __init__(self, start_time=100, vaccination_rate=10):
-        self.start_time = start_time #day the vaccine begins to be distributed
-        self.vaccination_rate = vaccination_rate #how many people vaccinated each day
+    def __init__(self, start_time=100, vaccination_capacity_rate=0.25, vaccination_max_capacity=20):
+        self.start_time = start_time  # Day the vaccine begins to be distributed
+        self.vaccination_capacity_rate = vaccination_capacity_rate  # How much to increase vaccination capacity each day
+        self.vaccination_max_capacity = vaccination_max_capacity  # Max vaccination capacity per day
+        self.vaccination_capacity = 0
+
+    def increase_capacity(self):
+        # Increases vaccination capacity
+        if self.vaccination_capacity + self.vaccination_capacity_rate <= self.vaccination_max_capacity:
+            self.vaccination_capacity += self.vaccination_capacity_rate
+        else:
+            self.vaccination_capacity = self.vaccination_max_capacity
 
     def vaccinate(self, state):
+        self.increase_capacity()
         new_state = state.copy()
         eligible_to_vaccinate = [(i, j) for i in range(len(new_state)) for j in range(len(new_state[i])) if new_state[i, j] == SUSCEPTIBLE or new_state[i, j] == RECOVERED]
-        people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_rate))
+        people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
         for i, j in people_to_vaccinate:
             new_state[i, j] = VACCINATED
         return new_state

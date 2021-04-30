@@ -103,16 +103,17 @@ class Person:
 
 # Vaccination class
 class Vaccinator:
-    def __init__(self, state, start_time=100, vaccination_rate=10):
-        self.state = state
+    def __init__(self, start_time=100, vaccination_rate=10):
         self.start_time = start_time #day the vaccine begins to be distributed
         self.vaccination_rate = vaccination_rate #how many people vaccinated each day
 
-    def vaccinate(self):
-        eligible_to_vaccinate = [(i, j) for i in range(len(self.state)) for j in range(len(self.state[i])) if self.state[i, j] == SUSCEPTIBLE or self.state[i, j] == RECOVERED]
-        people_to_vaccinate = choices(eligible_to_vaccinate, k=self.vaccination_rate)
+    def vaccinate(self, state):
+        new_state = state.copy()
+        eligible_to_vaccinate = [(i, j) for i in range(len(new_state)) for j in range(len(new_state[i])) if new_state[i, j] == SUSCEPTIBLE or new_state[i, j] == RECOVERED]
+        people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_rate))
         for i, j in people_to_vaccinate:
-            self.state[i, j] = VACCINATED
+            new_state[i, j] = VACCINATED
+        return new_state
 
 
 # ----------------------------------------------------------------------------#
@@ -238,12 +239,12 @@ class Simulation:
         # Use a copy of the old state to store the new state so that e.g. if
         # someone recovers but was infected yesterday their neighbours might
         # still become infected today.
-        self.vaccinator.vaccinate()
         old_state = self.state
         new_state = old_state.copy()
+        new_state = self.vaccinator.vaccinate(old_state)
         for i in range(self.width):
             for j in range(self.height):
-                new_state[i, j] = self.get_new_status(old_state, i, j)
+                new_state[i, j] = self.get_new_status(new_state, i, j)
         self.state = new_state
         self.day += 1
 

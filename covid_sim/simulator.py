@@ -280,7 +280,7 @@ class Simulation:
         """Dict giving percentage of people in each statue"""
 
         # NOTE: Maybe it's better to return counts rather than percentages...
-        simgrid = self.state
+        simgrid = self.get_status_grid()
         total = self.width * self.height
         percentages = {}
         for status, statusnum in self.STATUSES.items():
@@ -300,7 +300,7 @@ class Simulation:
         for status, statusnum in self.STATUSES.items():
             colour_name = self.COLOURMAP[status]
             colour_rgb = self.COLOURMAP_RGB[colour_name]
-            rgb_matrix[self.state == statusnum] = colour_rgb
+            rgb_matrix[self.get_status_grid() == statusnum] = colour_rgb
         return rgb_matrix
 
 

@@ -303,3 +303,10 @@ class Simulation:
             rgb_matrix[self.get_status_grid() == statusnum] = colour_rgb
         return rgb_matrix
 
+    def get_status_grid(self):
+        state = np.zeros(self.pop.shape)
+        
+        for i in range(len(state)):
+            for j in range(len(state[i])):
+                state[i, j] = self.pop[i, j].status
+        return state

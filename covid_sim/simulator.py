@@ -308,11 +308,4 @@ class Simulation:
         return rgb_matrix
 
 
-if __name__ == "__main__":
-    #
-    # CLI entry point. The main() function can also be imported and called
-    # with string arguments.
-    #
-    import sys
 
-    main(*sys.argv[1:])

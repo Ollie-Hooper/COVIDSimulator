@@ -277,7 +277,7 @@ class Simulation:
         return number
 
     def get_count_status(self):
-        """Dict giving percentage of people in each statue"""
+        """Dict giving counts of people's status"""
 
         # NOTE: Maybe it's better to return counts rather than percentages...
         simgrid = self.get_status_grid()

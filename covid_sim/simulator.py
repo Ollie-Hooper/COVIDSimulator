@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 
 simulator.py
@@ -34,6 +35,8 @@ must also be on PATH.
 
 import numpy as np
 from numpy.random import random, randint, choice
+from random import choices
+
 
 # ----------------------------------------------------------------------------#
 #                   Class design                                              #
@@ -73,10 +76,38 @@ SUSCEPTIBLE = 0
 INFECTED = 1
 RECOVERED = 2
 DEAD = 3
+VACCINATED = 4
 
 
-#  Person class
+# Vaccination class
+class Vaccinator:
+    def __init__(self, start_time=20, vaccination_capacity_rate=0.25, vaccination_max_capacity=20):
+        self.start_time = start_time  # Day the vaccine begins to be distributed
+        self.vaccination_capacity_rate = vaccination_capacity_rate  # How much to increase vaccination capacity each day
+        self.vaccination_max_capacity = vaccination_max_capacity  # Max vaccination capacity per day
+        self.vaccination_capacity = 0
 
+    def increase_capacity(self):
+        # Increases vaccination capacity
+        if self.vaccination_capacity + self.vaccination_capacity_rate <= self.vaccination_max_capacity:
+            self.vaccination_capacity += self.vaccination_capacity_rate
+        else:
+            self.vaccination_capacity = self.vaccination_max_capacity
+
+    def vaccinate(self, pop):
+        self.increase_capacity()
+        new_pop = pop.copy()
+        eligible_to_vaccinate = [(i, j) for i in range(len(new_pop)) for j in range(len(new_pop[i])) if new_pop[i, j].status == SUSCEPTIBLE or new_pop[i, j].status == RECOVERED]
+        if int(self.vaccination_capacity) <= len(eligible_to_vaccinate):
+            people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
+        else:
+            people_to_vaccinate = eligible_to_vaccinate
+        for i, j in people_to_vaccinate:
+            new_pop[i, j].set_status(VACCINATED)
+        return new_pop
+
+
+# Person class
 class Person:
 
     def __init__(self, infection_length=14):
@@ -111,8 +142,6 @@ class Person:
 
     def set_status(self, status):
         self.status = status
-        
-        
 
 
 # ----------------------------------------------------------------------------#
@@ -184,24 +213,29 @@ class Simulation:
     INFECTED = 1
     RECOVERED = 2
     DEAD = 3
+    VACCINATED = 4
+    
 
     STATUSES = {
         'susceptible': SUSCEPTIBLE,
         'infected': INFECTED,
         'recovered': RECOVERED,
         'dead': DEAD,
+        'vaccinated': VACCINATED
     }
     COLOURMAP = {
-        'susceptible': 'green',
+        'susceptible': 'yellow',
         'infected': 'red',
         'recovered': 'blue',
         'dead': 'black',
+        'vaccinated': 'green'
     }
     COLOURMAP_RGB = {
         'red': (255, 0, 0),
         'green': (0, 255, 0),
         'blue': (0, 0, 255),
         'black': (0, 0, 0),
+        'yellow': (255, 255, 0),
     }
 
     def __init__(self, width, height, recovery, infection, death):
@@ -218,6 +252,8 @@ class Simulation:
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
                 self.pop[i, j] = Person()
+
+        self.vaccinator = Vaccinator()
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""
@@ -236,10 +272,12 @@ class Simulation:
         # still become infected today.
         old_pop = self.pop
         new_pop = old_pop.copy()
+        if self.vaccinator.start_time <= self.day:
+            new_pop = self.vaccinator.vaccinate(old_pop)
         for i in range(self.width):
             for j in range(self.height):
-                self.set_new_status(old_pop, i, j)
-        self.state = new_pop
+                self.set_new_status(new_pop, i, j)
+        self.pop = new_pop
         self.day += 1
 
     def set_new_status(self, pop, i, j):

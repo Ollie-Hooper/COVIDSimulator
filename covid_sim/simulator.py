@@ -282,11 +282,10 @@ class Simulation:
         # NOTE: Maybe it's better to return counts rather than percentages...
         simgrid = self.get_status_grid()
         total = self.width * self.height
-        percentages = {}
+        counts = {}
         for status, statusnum in self.STATUSES.items():
-            count = np.count_nonzero(simgrid == statusnum)
-            percentages[status] = 100 * count / total
-        return percentages
+            counts[status] = np.count_nonzero(simgrid == statusnum)
+        return counts
 
     def get_rgb_matrix(self):
         """RGB matrix representing the statuses of the people in the grid

@@ -236,7 +236,8 @@ class Simulation:
         # still become infected today.
         old_state = self.state
         new_state = old_state.copy()
-        new_state = self.vaccinator.vaccinate(old_state)
+        if self.vaccinator.start_time <= self.day:
+            new_state = self.vaccinator.vaccinate(old_state)
         for i in range(self.width):
             for j in range(self.height):
                 new_state[i, j] = self.get_new_status(new_state, i, j)

@@ -33,7 +33,7 @@ must also be on PATH.
 """
 
 import numpy as np
-from numpy.random import random, randint
+from numpy.random import random, randint, choice
 
 # ----------------------------------------------------------------------------#
 #                   Class design                                              #

@@ -174,7 +174,7 @@ class Simulation:
     >>> sim.infect_randomly(3)  # infect three people (chosen randomly)
     >>> for n in range(10):     # advance the simulation through 10 days
     ...     sim.update()
-    >>> sim.get_percentage_status()
+    >>> sim.get_count_status()
     {'susceptible': 90.0, 'infected': 6.0, 'recovered': 3.0, 'dead': 1.0}
 
     """
@@ -276,7 +276,7 @@ class Simulation:
 
         return number
 
-    def get_percentage_status(self):
+    def get_count_status(self):
         """Dict giving percentage of people in each statue"""
 
         # NOTE: Maybe it's better to return counts rather than percentages...

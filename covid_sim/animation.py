@@ -113,7 +113,7 @@ class LineAnimation:
         return []
 
     def update(self, framenum):
-        percents = self.simulation.get_percentage_status()
+        percents = self.simulation.get_count_status()
         self.xdata.append(len(self.xdata))
         for status, percent in percents.items():
             self.ydata[status].append(percent)

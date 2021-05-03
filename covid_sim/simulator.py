@@ -82,7 +82,7 @@ class Person:
     def __init__(self, infection_length=14):
         self.status = SUSCEPTIBLE
         self.infection_length = infection_length
-        self.age = random.choice(random.choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
+        self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
                           p=[0.22, 0.12, 0.31, 0.22, 0.13]))
         self.set_probabilities()
 

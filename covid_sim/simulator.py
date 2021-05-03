@@ -102,7 +102,10 @@ class Vaccinator:
         self.increase_capacity()
         new_state = state.copy()
         eligible_to_vaccinate = [(i, j) for i in range(len(new_state)) for j in range(len(new_state[i])) if new_state[i, j] == SUSCEPTIBLE or new_state[i, j] == RECOVERED]
-        people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
+        if int(self.vaccination_capacity) <= len(eligible_to_vaccinate):
+            people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
+        else:
+            people_to_vaccinate = eligible_to_vaccinate
         for i, j in people_to_vaccinate:
             new_state[i, j] = VACCINATED
         return new_state

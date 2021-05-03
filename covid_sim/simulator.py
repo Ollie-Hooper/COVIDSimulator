@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 
 simulator.py
@@ -33,7 +34,7 @@ must also be on PATH.
 """
 
 import numpy as np
-from numpy.random import random, randint
+from numpy.random import random, randint, choice
 from random import choices
 
 
@@ -78,14 +79,9 @@ DEAD = 3
 VACCINATED = 4
 
 
-#  Person class
-
-
-
-
 # Vaccination class
 class Vaccinator:
-    def __init__(self, start_time=100, vaccination_capacity_rate=0.25, vaccination_max_capacity=20):
+    def __init__(self, start_time=20, vaccination_capacity_rate=0.25, vaccination_max_capacity=20):
         self.start_time = start_time  # Day the vaccine begins to be distributed
         self.vaccination_capacity_rate = vaccination_capacity_rate  # How much to increase vaccination capacity each day
         self.vaccination_max_capacity = vaccination_max_capacity  # Max vaccination capacity per day
@@ -98,17 +94,54 @@ class Vaccinator:
         else:
             self.vaccination_capacity = self.vaccination_max_capacity
 
-    def vaccinate(self, state):
+    def vaccinate(self, pop):
         self.increase_capacity()
-        new_state = state.copy()
-        eligible_to_vaccinate = [(i, j) for i in range(len(new_state)) for j in range(len(new_state[i])) if new_state[i, j] == SUSCEPTIBLE or new_state[i, j] == RECOVERED]
+        new_pop = pop.copy()
+        eligible_to_vaccinate = [(i, j) for i in range(len(new_pop)) for j in range(len(new_pop[i])) if new_pop[i, j].status == SUSCEPTIBLE or new_pop[i, j].status == RECOVERED]
         if int(self.vaccination_capacity) <= len(eligible_to_vaccinate):
             people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
         else:
             people_to_vaccinate = eligible_to_vaccinate
         for i, j in people_to_vaccinate:
-            new_state[i, j] = VACCINATED
-        return new_state
+            new_pop[i, j].set_status(VACCINATED)
+        return new_pop
+
+
+# Person class
+class Person:
+
+    def __init__(self, infection_length=14):
+        self.status = SUSCEPTIBLE
+        self.infection_length = infection_length
+        self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
+                          p=[0.22, 0.12, 0.31, 0.22, 0.13]))
+        self.set_probabilities()
+
+    # probabilities of age based on age group
+    def set_probabilities(self):
+        if self.age < 50:
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.01 / self.infection_length
+        elif self.age < 60:
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.02 / self.infection_length
+        elif self.age < 70:
+            self.recovery_probability = 0.7  / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length             #Death statistics based off covid related data on mortality rates of different ages
+            self.death_probability = 0.04 / self.infection_length
+        elif self.age < 80:
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.08 / self.infection_length
+        elif self.age <= 100:
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length
+            self.death_probability = 0.15 / self.infection_length
+
+    def set_status(self, status):
+        self.status = status
 
 
 # ----------------------------------------------------------------------------#
@@ -214,9 +247,11 @@ class Simulation:
         self.infection_probability = infection
         self.death_probability = death
 
-        # Initial state (everyone susceptible)
-        self.state = np.zeros((width, height), int)
-        self.state[:, :] = self.SUSCEPTIBLE
+        # Initialise Population (everyone susceptible with range of ages assigned to each element)
+        self.pop = np.zeros((width, height), dtype=Person)
+        for i in range(len(self.pop)):
+            for j in range(len(self.pop[i])):
+                self.pop[i, j] = Person()
 
         self.vaccinator = Vaccinator()
 
@@ -227,44 +262,42 @@ class Simulation:
             # NOTE: This might select the same person twice...
             i = randint(self.width)
             j = randint(self.height)
-            self.state[i, j] = self.INFECTED
+            self.pop[i, j].set_status(self.INFECTED)
+            
 
     def update(self):
         """Advance the simulation by one day"""
         # Use a copy of the old state to store the new state so that e.g. if
         # someone recovers but was infected yesterday their neighbours might
         # still become infected today.
-        old_state = self.state
-        new_state = old_state.copy()
+        old_pop = self.pop
+        new_pop = old_pop.copy()
         if self.vaccinator.start_time <= self.day:
-            new_state = self.vaccinator.vaccinate(old_state)
+            new_pop = self.vaccinator.vaccinate(old_pop)
         for i in range(self.width):
             for j in range(self.height):
-                new_state[i, j] = self.get_new_status(new_state, i, j)
-        self.state = new_state
+                self.set_new_status(new_pop, i, j)
+        self.pop = new_pop
         self.day += 1
 
-    def get_new_status(self, state, i, j):
+    def set_new_status(self, pop, i, j):
         """Compute new status for person at i, j in the grid"""
-        status = state[i, j]
+        person = pop[i, j]
 
         # Update infected person
-        if status == self.INFECTED:
-            if self.recovery_probability > random():
-                return self.RECOVERED
-            elif self.death_probability > random():
-                return self.DEAD
+        if person.status == self.INFECTED:
+            if person.recovery_probability > random():
+                person.set_status(self.RECOVERED)
+            elif person.death_probability > random():
+                person.set_status(self.DEAD)
 
         # Update susceptible person
-        elif status == self.SUSCEPTIBLE:
-            num = self.num_infected_around(state, i, j)
+        elif person.status == self.SUSCEPTIBLE:
+            num = self.num_infected_around(pop, i, j)
             if num * self.infection_probability > random():
-                return self.INFECTED
+                person.set_status(self.INFECTED)
 
-        # Return the old status (e.g. DEAD/RECOVERED)
-        return status
-
-    def num_infected_around(self, state, i, j):
+    def num_infected_around(self, pop, i, j):
         """Count the number of infected people around person i, j"""
 
         # Need to be careful about people at the edge of the grid.
@@ -276,7 +309,7 @@ class Simulation:
             for jp in jvals:
                 # Don't count self as a neighbour
                 if (ip, jp) != (i, j):
-                    if state[ip, jp] == self.INFECTED:
+                    if pop[ip, jp].status == self.INFECTED:
                         number += 1
 
         return number
@@ -285,7 +318,7 @@ class Simulation:
         """Dict giving percentage of people in each statue"""
 
         # NOTE: Maybe it's better to return counts rather than percentages...
-        simgrid = self.state
+        simgrid = self.get_status_grid()
         total = self.width * self.height
         percentages = {}
         for status, statusnum in self.STATUSES.items():
@@ -305,8 +338,13 @@ class Simulation:
         for status, statusnum in self.STATUSES.items():
             colour_name = self.COLOURMAP[status]
             colour_rgb = self.COLOURMAP_RGB[colour_name]
-            rgb_matrix[self.state == statusnum] = colour_rgb
+            rgb_matrix[self.get_status_grid() == statusnum] = colour_rgb
         return rgb_matrix
 
-
-
+    def get_status_grid(self):
+        state = np.zeros(self.pop.shape)
+        
+        for i in range(len(state)):
+            for j in range(len(state[i])):
+                state[i, j] = self.pop[i, j].status
+        return state

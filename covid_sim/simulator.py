@@ -245,9 +245,6 @@ class Simulation:
         self.day = 0
         self.width = width
         self.height = height
-        self.recovery_probability = recovery
-        self.infection_probability = infection
-        self.death_probability = death
 
         # Initialise Population (everyone susceptible with range of ages assigned to each element)
         self.pop = np.zeros((width, height), dtype=Person)

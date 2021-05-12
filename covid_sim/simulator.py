@@ -160,6 +160,15 @@ class Measure:
                 setattr(pop[i, j], self.probability_attr, new_probability)
         return pop
 
+    def stop(self, pop):
+        for i in range(len(pop)):
+            for j in range(len(pop[i])):
+                old_probability  = getattr(pop[i, j], self.probability_attr)
+                new_probability - old_probabilty / self.multiplier
+                setattr(pop[i, j], self.probability_attr, new_probability)
+        return pop
+
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

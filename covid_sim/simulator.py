@@ -155,7 +155,7 @@ class Measure:
     def update(self, pop, date):
         if date in self.start_dates:
             new_pop = self.start(pop.copy())
-        elif date in self.end_dates:            # Updates population attributes when Measure date is reached
+        elif date in self.end_dates:  # Updates population attributes when Measure date is reached
             new_pop = self.stop(pop.copy())
         else:
             new_pop = pop.copy()
@@ -172,8 +172,8 @@ class Measure:
     def stop(self, pop):
         for i in range(len(pop)):
             for j in range(len(pop[i])):
-                old_probability  = getattr(pop[i, j], self.probability_attr)
-                new_probability - old_probabilty / self.multiplier
+                old_probability = getattr(pop[i, j], self.probability_attr)
+                new_probability = old_probability / self.multiplier
                 setattr(pop[i, j], self.probability_attr, new_probability)
         return pop
 
@@ -181,6 +181,7 @@ class Measure:
 class Lockdown(Measure):
     def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5):
         super().__init__(start_dates, end_dates, multiplier, 'infected_probability')
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

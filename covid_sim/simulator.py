@@ -295,7 +295,7 @@ class Simulation:
         # Update susceptible person
         elif person.status == self.SUSCEPTIBLE:
             num = self.num_infected_around(pop, i, j)
-            if num * self.infection_probability > random():
+            if num * person.infection_probability > random():
                 person.set_status(self.INFECTED)
 
     def num_infected_around(self, pop, i, j):

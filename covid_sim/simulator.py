@@ -143,6 +143,14 @@ class Person:
     def set_status(self, status):
         self.status = status
 
+class Measure:
+    
+    def __init__(self, start_dates= (25), end_dates= (75,), multiplier= 0.5, probability_attr = 'infected probability'):
+        self.start_dates = start_dates
+        self.end_dates = end_dates
+        self.multiplier = multiplier # chosen probabilities
+        self.probability_attr = probability_attr
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

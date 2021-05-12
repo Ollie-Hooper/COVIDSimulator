@@ -71,4 +71,5 @@ if __name__ == "__main__":
     # with string arguments.
     #
     import sys
+
     main(*sys.argv[1:])

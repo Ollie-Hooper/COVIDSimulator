@@ -288,6 +288,7 @@ class Simulation:
                 self.pop[i, j] = Person()
 
         self.vaccinator = Vaccinator()
+        self.measures = [Measure()]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""
@@ -307,6 +308,10 @@ class Simulation:
         new_pop = old_pop.copy()
         if self.vaccinator.start_time <= self.day:
             new_pop = self.vaccinator.vaccinate(old_pop)
+
+        for measure in self.measures:
+            new_pop = measure.upd(new_pop, self.day)
+
         for i in range(self.width):
             for j in range(self.height):
                 self.set_new_status(new_pop, i, j)

@@ -310,7 +310,7 @@ class Simulation:
             new_pop = self.vaccinator.vaccinate(old_pop)
 
         for measure in self.measures:
-            new_pop = measure.upd(new_pop, self.day)
+            new_pop = measure.update(new_pop, self.day)
 
         for i in range(self.width):
             for j in range(self.height):

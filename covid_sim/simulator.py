@@ -37,7 +37,6 @@ import numpy as np
 from numpy.random import random, randint, choice
 from random import choices
 
-
 # ----------------------------------------------------------------------------#
 #                   Class design                                              #
 # ----------------------------------------------------------------------------#
@@ -97,7 +96,8 @@ class Vaccinator:
     def vaccinate(self, pop):
         self.increase_capacity()
         new_pop = pop.copy()
-        eligible_to_vaccinate = [(i, j) for i in range(len(new_pop)) for j in range(len(new_pop[i])) if new_pop[i, j].status == SUSCEPTIBLE or new_pop[i, j].status == RECOVERED]
+        eligible_to_vaccinate = [(i, j) for i in range(len(new_pop)) for j in range(len(new_pop[i])) if
+                                 new_pop[i, j].status == SUSCEPTIBLE or new_pop[i, j].status == RECOVERED]
         if int(self.vaccination_capacity) <= len(eligible_to_vaccinate):
             people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
         else:
@@ -114,7 +114,7 @@ class Person:
         self.status = SUSCEPTIBLE
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
-                          p=[0.22, 0.12, 0.31, 0.22, 0.13]))
+                                 p=[0.22, 0.12, 0.31, 0.22, 0.13]))
         self.set_probabilities()
 
     # probabilities of age based on age group
@@ -128,8 +128,8 @@ class Person:
             self.infected_probability = 0.4 / self.infection_length
             self.death_probability = 0.02 / self.infection_length
         elif self.age < 70:
-            self.recovery_probability = 0.7  / self.infection_length
-            self.infected_probability = 0.4 / self.infection_length             #Death statistics based off covid related data on mortality rates of different ages
+            self.recovery_probability = 0.7 / self.infection_length
+            self.infected_probability = 0.4 / self.infection_length  # Death statistics based off covid related data on mortality rates of different ages
             self.death_probability = 0.04 / self.infection_length
         elif self.age < 80:
             self.recovery_probability = 0.7 / self.infection_length
@@ -214,7 +214,6 @@ class Simulation:
     RECOVERED = 2
     DEAD = 3
     VACCINATED = 4
-    
 
     STATUSES = {
         'susceptible': SUSCEPTIBLE,
@@ -263,7 +262,6 @@ class Simulation:
             i = randint(self.width)
             j = randint(self.height)
             self.pop[i, j].set_status(self.INFECTED)
-            
 
     def update(self):
         """Advance the simulation by one day"""
@@ -342,7 +340,7 @@ class Simulation:
 
     def get_status_grid(self):
         state = np.zeros(self.pop.shape)
-        
+
         for i in range(len(state)):
             for j in range(len(state[i])):
                 state[i, j] = self.pop[i, j].status

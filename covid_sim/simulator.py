@@ -178,6 +178,9 @@ class Measure:
         return pop
 
 
+class Lockdown(Measure):
+    def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5):
+        super().__init__(start_dates, end_dates, multiplier, 'infected_probability')
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #
@@ -288,7 +291,7 @@ class Simulation:
                 self.pop[i, j] = Person()
 
         self.vaccinator = Vaccinator()
-        self.measures = [Measure()]
+        self.measures = [Lockdown()]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

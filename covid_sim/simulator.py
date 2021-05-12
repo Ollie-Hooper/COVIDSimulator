@@ -203,7 +203,7 @@ class Simulation:
     >>> sim.infect_randomly(3)  # infect three people (chosen randomly)
     >>> for n in range(10):     # advance the simulation through 10 days
     ...     sim.update()
-    >>> sim.get_percentage_status()
+    >>> sim.get_count_status()
     {'susceptible': 90.0, 'infected': 6.0, 'recovered': 3.0, 'dead': 1.0}
 
     """
@@ -314,17 +314,16 @@ class Simulation:
 
         return number
 
-    def get_percentage_status(self):
-        """Dict giving percentage of people in each statue"""
+    def get_count_status(self):
+        """Dict giving counts of people's status"""
 
         # NOTE: Maybe it's better to return counts rather than percentages...
         simgrid = self.get_status_grid()
         total = self.width * self.height
-        percentages = {}
+        counts = {}
         for status, statusnum in self.STATUSES.items():
-            count = np.count_nonzero(simgrid == statusnum)
-            percentages[status] = 100 * count / total
-        return percentages
+            counts[status] = np.count_nonzero(simgrid == statusnum)
+        return counts
 
     def get_rgb_matrix(self):
         """RGB matrix representing the statuses of the people in the grid

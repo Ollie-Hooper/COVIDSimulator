@@ -152,6 +152,14 @@ class Measure:
         self.multiplier = multiplier  # chosen probabilities
         self.probability_attr = probability_attr
 
+    def start(self, pop):
+        for i in range(len(pop)):
+            for j in range(len(pop)):
+                old_probability = getattr(pop[i, j], self.probability_attr)
+                new_probability = old_probability * self.multiplier
+                setattr(pop[i, j], self.probability_attr, new_probability)
+        return pop
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

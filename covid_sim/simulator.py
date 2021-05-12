@@ -115,6 +115,9 @@ class Person:
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
                                  p=[0.22, 0.12, 0.31, 0.22, 0.13]))
+        self.recovery_probability = 0
+        self.infection_probability = 0
+        self.death_probability = 0
         self.set_probabilities()
 
     # probabilities of age based on age group

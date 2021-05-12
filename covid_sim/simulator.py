@@ -152,6 +152,15 @@ class Measure:
         self.multiplier = multiplier  # chosen probabilities
         self.probability_attr = probability_attr
 
+    def update(self, pop, date):
+        if date in self.start_dates:
+            new_pop = self.start(pop.copy())
+        elif date in self.end_dates:            # Updates population attributes when Measure date is reached
+            new_pop = self.stop(pop.copy())
+        else:
+            new_pop = pop.copy()
+        return new_pop
+
     def start(self, pop):
         for i in range(len(pop)):
             for j in range(len(pop)):

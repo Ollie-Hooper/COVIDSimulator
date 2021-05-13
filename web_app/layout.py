@@ -4,6 +4,34 @@ import dash_bootstrap_components as dbc
 
 
 def get_layout():
-    return html.Div([
+    return dbc.Container([
+        dbc.Row([
+            dbc.Col([
+                dbc.Container([
 
-    ])
+                ])
+            ]),
+            dbc.Col([
+                dbc.Container([
+
+                ])
+            ]),
+            dbc.Col([
+                dbc.Container([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Button("Run animation", color="primary", id="btn-run-anim")
+                        ])
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Button("Save plot", color="secondary", id="btn-save-plot")
+                        ]),
+                        dbc.Col([
+                            dbc.Input(placeholder="File name/location", id="txt-plot-fname")
+                        ])
+                    ])
+                ], fluid=True)
+            ])
+        ])
+    ], fluid=True)

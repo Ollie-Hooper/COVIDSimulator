@@ -84,6 +84,47 @@ def get_layout(defaults):
         ]),
         html.Br(),
         dbc.Container([
+            dbc.Button(
+                "Measures",
+                id="btn-measures",
+                color="info",
+            ),
+            dbc.Collapse([
+                dbc.Card([
+                    dbc.Container([
+                        html.H5(measure)
+                    ]),
+                    dbc.CardBody([
+                        dbc.InputGroup([
+                            dbc.Checklist(options=[
+                                {"label": "Enable?", "value": 1}
+                            ],
+                                value=[],
+                                id=f"swt-measures-{measure}",
+                                switch=True
+                            ),
+                        ]),
+                        dbc.InputGroup([
+                            dbc.InputGroupAddon("Start dates", addon_type="prepend"),
+                            dbc.Input(value=str(defaults["measures"][measure]["starts"])[1:-1],
+                                      id=f"num-measures-{measure}-starts"),
+                        ]),
+                        dbc.InputGroup([
+                            dbc.InputGroupAddon("End dates", addon_type="prepend"),
+                            dbc.Input(value=str(defaults["measures"][measure]["ends"])[1:-1],
+                                      id=f"num-measures-{measure}-ends"),
+                        ]),
+                        dbc.InputGroup([
+                            dbc.InputGroupAddon("Multiplier", addon_type="prepend"),
+                            dbc.Input(value=defaults["measures"][measure]["multiplier"], type="number", min=0,
+                                      step=0.01, id=f"num-measures-{measure}-multiplier"),
+                        ])
+                    ])
+                ]) for measure, kwargs in defaults["measures"].items()
+            ], is_open=True, id="clp-measures")
+        ]),
+        html.Br(),
+        dbc.Container([
             dbc.Row([
                 dbc.Col([
                     dbc.Button("Run/Save animation", color="primary", id="btn-anim")

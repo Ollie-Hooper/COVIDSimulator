@@ -16,12 +16,12 @@ def get_app():
 
     @app.callback(
         Output('lbl-status', 'children'),
-        [Input('btn-run-anim', 'n_clicks'),
-         Input('btn-plot', 'n_clicks'),
-         Input('txt-plot-fname', 'value'),
-         ]
+        [Input('btn-anim', 'n_clicks'),
+         Input('btn-plot', 'n_clicks')],
+        [State('txt-anim-fname', 'value'),
+         State('txt-plot-fname', 'value')]
     )
-    def run(btn_run_anim, btn_plot, plot_fname):
+    def run(btn_anim, btn_plot, anim_fname, plot_fname):
         ctx = dash.callback_context
 
         if not ctx.triggered:
@@ -33,17 +33,23 @@ def get_app():
         simulation = Simulation(50, 50, 0.1, 0.1, 0.005)
         simulation.infect_randomly(2)
 
-        if btn == 'run-anim':
+        if btn == 'anim':
             animation = Animation(simulation, 100)
-            animation.show()
+
+            if anim_fname is None:
+                animation.show()
+                return "Finished showing animation"
+            else:
+                animation.save(anim_fname)
+                return f"Finished saving animation in {anim_fname}"
         elif btn == 'plot':
             fig = plot_simulation(simulation, 100)
 
             if plot_fname is None:
                 plt.show()
+                return "Finished showing plot"
             else:
                 fig.savefig(plot_fname)
-
-        return "Finished animation"
+                return f"Finished saving plot in {plot_fname}"
 
     return app

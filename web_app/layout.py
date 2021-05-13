@@ -20,7 +20,10 @@ def get_layout():
                 dbc.Container([
                     dbc.Row([
                         dbc.Col([
-                            dbc.Button("Run animation", color="primary", id="btn-run-anim")
+                            dbc.Button("Run/Save animation", color="primary", id="btn-anim")
+                        ]),
+                        dbc.Col([
+                            dbc.Input(placeholder="(Optional) File name to save animation", id="txt-anim-fname")
                         ])
                     ]),
                     dbc.Row([

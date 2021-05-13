@@ -1,8 +1,10 @@
+import base64
+import os
+
 import dash
 import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input, State
 from dash.exceptions import PreventUpdate
-from matplotlib import pyplot as plt
 
 from covid_sim.animation import Animation, plot_simulation
 from covid_sim.simulator import Simulation
@@ -59,17 +61,24 @@ def get_app(defaults):
             animation = Animation(simulation, duration=kwargs["duration"])
 
             if anim_fname is None:
+                if not os.path.exists("web_app/assets"):
+                    os.mkdir("web_app/assets")
                 animation.save("web_app/assets/anim.gif")
-                return "Finished generating animation", app.get_asset_url("anim.gif"), plot_src
+                encoded_gif = base64.b64encode(open("web_app/assets/anim.gif", "rb").read())
+                return "Finished generating animation", f"data:image/png;base64,{encoded_gif.decode()}", plot_src
             else:
                 animation.save(anim_fname)
                 return f"Finished saving animation in {anim_fname}", anim_src, plot_src
+
         elif btn == 'plot':
             fig = plot_simulation(simulation, 100)
 
             if plot_fname is None:
+                if not os.path.exists("web_app/assets"):
+                    os.mkdir("web_app/assets")
                 fig.savefig("web_app/assets/plot.png")
-                return "Finished generating plot", anim_src, app.get_asset_url("plot.png")
+                encoded_png = base64.b64encode(open("web_app/assets/plot.png", "rb").read())
+                return "Finished generating plot", anim_src, f"data:image/png;base64,{encoded_png.decode()}"
             else:
                 fig.savefig(plot_fname)
                 return f"Finished saving plot in {plot_fname}"

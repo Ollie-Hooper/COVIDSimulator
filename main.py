@@ -6,6 +6,7 @@ defaults = {
     "size": 50,
     "duration": 100,
     "cases": 2,
+    "length": 14,
     "probabilities": {
         "Infection": {50: 0.1, 60: 0.1, 70: 0.1, 80: 0.1, 100: 0.1},
         "Recovery": {50: 0.7, 60: 0.7, 70: 0.7, 80: 0.7, 100: 0.7},

@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 
 from covid_sim.animation import Animation, plot_simulation
 from covid_sim.simulator import Simulation
+from web_app.functions import get_bottom_lvl_keys
 from web_app.layout import get_layout
 
 
@@ -32,7 +33,7 @@ def get_app(defaults):
         else:
             btn = '-'.join(ctx.triggered[0]['prop_id'].split('.')[0].split('-')[1:])
 
-        input_names = defaults.keys()
+        input_names = get_bottom_lvl_keys(defaults, [], [])
         kwargs = dict(zip(input_names, args))
 
         # Set up the simulation

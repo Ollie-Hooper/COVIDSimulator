@@ -200,12 +200,11 @@ class Simulation:
     Example
     =======
 
-    Create a simulation on a 10x10 grid (with 100 people) with probabilities
-    0.1, 0.2 and 0.05 for recovery, infection and death and 3 people initially
+    Create a simulation on a 10x10 grid (with 100 people) and 3 people initially
     infected. Run the simulation for 10 days and then ask what percentage of
     people are in each state:
 
-    >>> sim = Simulation(10, 10, recovery=0.1, infection=0.2, death=0.05)
+    >>> sim = Simulation(10, 10)
     >>> sim.infect_randomly(3)  # infect three people (chosen randomly)
     >>> for n in range(10):     # advance the simulation through 10 days
     ...     sim.update()

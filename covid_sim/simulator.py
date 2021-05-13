@@ -122,25 +122,26 @@ class Person:
 
     # probabilities of age based on age group
     def set_probabilities(self):
+        # Death statistics based off covid related data on mortality rates of different ages
         if self.age < 50:
             self.recovery_probability = 0.7 / self.infection_length
-            self.infection_probability = 0.4 / self.infection_length
+            self.infection_probability = 0.1
             self.death_probability = 0.01 / self.infection_length
         elif self.age < 60:
             self.recovery_probability = 0.7 / self.infection_length
-            self.infection_probability = 0.4 / self.infection_length
+            self.infection_probability = 0.1
             self.death_probability = 0.02 / self.infection_length
         elif self.age < 70:
             self.recovery_probability = 0.7 / self.infection_length
-            self.infection_probability = 0.4 / self.infection_length  # Death statistics based off covid related data on mortality rates of different ages
+            self.infection_probability = 0.1
             self.death_probability = 0.04 / self.infection_length
         elif self.age < 80:
             self.recovery_probability = 0.7 / self.infection_length
-            self.infection_probability = 0.4 / self.infection_length
+            self.infection_probability = 0.1
             self.death_probability = 0.08 / self.infection_length
         elif self.age <= 100:
             self.recovery_probability = 0.7 / self.infection_length
-            self.infection_probability = 0.4 / self.infection_length
+            self.infection_probability = 0.1
             self.death_probability = 0.15 / self.infection_length
 
     def set_status(self, status):

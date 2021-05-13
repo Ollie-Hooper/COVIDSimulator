@@ -1,75 +1,17 @@
 #!/usr/bin/env python3
 
 """
+Simulator.py is used to generate the data needed to simulate our virus pandemic.
+This works by generating a matrix of person objects, each with their own attributes on how the virus will affect them.
+Each person has the chance to spread the virus to any of their neighbours, depending on their probabilities of infection
+Individuals can be of 4 different states; Susceptible, Infected, Recovered or Dead, during the epidemic.
+The simulation begins by randomly infecting a select number of individuals, by updating their status to infected
 
-simulator.py
-Oscar Benjamin
-March 2021
-
-This script runs simulations of an epidemic (e.g. coronavirus) spreading
-around people on a 2-dimensional grid. The script can be used to:
-
-    1. Show an animation of the simulation on screen
-    2. Create a video of a simulation
-    3. Show a plot of different stages of the epidemic
-    4. Save a plot to a file
-
-This is all done using the same simulation code which can also be imported
-from this file and used in other ways.
-
-The command line interface to the script makes it possible to run different
-simulations without needing to edit the code e.g.:
-
-    $ python simulator.py               # run simulation with default settings
-    $ python simulator.py --cases=10    # have 10 initial cases
-    $ python simulator.py --help        # show all command line options
-
-It is also possible to create a video of the animation (if you install
-ffmpeg):
-
-    $ python simulator.py --file=simulation.mp4
-
-NOTE: You need to install ffmpeg for the above to work. The ffmpeg program
-must also be on PATH.
+Additionally, we have included a vaccination method, where persons are updated to a "Vaccinator" status at random,
+altering their probabilities.
+There are also additional parameters, through the Measures class, that may be selected when running the program. As an
+example, the Lockdown Measure will reduce the probability of infection for X number of days.
 """
-
-import numpy as np
-from numpy.random import random, randint, choice
-from random import choices
-
-# ----------------------------------------------------------------------------#
-#                   Class design                                              #
-# ----------------------------------------------------------------------------#
-
-# There are a number of classes here which could be combined in different
-# ways.  The idea is that the same classes could be reused for other things.
-# The classes are:
-#
-#    Simulation - stores and updates the simulation state
-#    Animation - runs an animation of the simulation
-#    GridAnimation - animates the epidemic on a grid
-#    LineAnimation - animates a timeseries of the epidemic
-#
-# The idea is that the Animation class sets up a plot window and creates a
-# GridAnimation and LineAnimation to manage the two different plot windows
-# that are animated. Each of those has update() and init() methods which the
-# Animation class will call to update the view. The Animation class also calls
-# the update() method of the Simulation class. The Simulation class provides
-# two ways to access the state of the simultion which are get_rgb_matrix() and
-# get_percentage_status() and these are used by the *Animation classes to get
-# the data that they need to display.
-#
-# The intention in this design is that the different pieces can be combined in
-# different ways. For example it would be possible to make an alternative
-# version of the Simulation class that simulated a different model of the
-# epidemic. As long as it hsa the update(), get_rgb_matrix() and
-# get_percentage_status() methods then it can work with all of the animation
-# classes. Also it would be possible to create an alternative version of the
-# Animation class that can still reuse e.g. LineAnimation even if it does not
-# want to use GridAnimation. Finally other *Animation classes could be created
-# as well and could easily be adapted to the scheme just by adding update()
-# and init() methods.
-
 
 SUSCEPTIBLE = 0
 INFECTED = 1
@@ -80,6 +22,13 @@ VACCINATED = 4
 
 # Vaccination class
 class Vaccinator:
+
+    """
+    The Vaccinator class is used to model our vaccine rollout.
+    It begins at a specified date during the epidemic, with the roll out rate developing over time
+    The Vaccine is designed to reduce the risk of infection, modelled by changing an individuals probabilities
+    """
+
     def __init__(self, start=20, rate=0.25, max=20):
         self.start_time = start  # Day the vaccine begins to be distributed
         self.vaccination_capacity_rate = rate  # How much to increase vaccination capacity each day
@@ -98,18 +47,22 @@ class Vaccinator:
         new_pop = pop.copy()
         eligible_to_vaccinate = [(i, j) for i in range(len(new_pop)) for j in range(len(new_pop[i])) if
                                  new_pop[i, j].status == SUSCEPTIBLE or new_pop[i, j].status == RECOVERED]
+        # ^ Decides whether a Person is eligible to vaccinate (only if they are Susceptible or Recovered) ^
         if int(self.vaccination_capacity) <= len(eligible_to_vaccinate):
             people_to_vaccinate = choices(eligible_to_vaccinate, k=int(self.vaccination_capacity))
         else:
             people_to_vaccinate = eligible_to_vaccinate
         for i, j in people_to_vaccinate:
             new_pop[i, j].set_status(VACCINATED)
-        return new_pop
+        return new_pop  # Returns updated population with vaccinated persons
 
 
 # Person class
 class Person:
-
+    """
+    The Person class creates each individual object to be added to the population
+    Each is assigned to an age range, which determines their infection, recovery and death probabilities
+    """
     def __init__(self, probabilities, infection_length=14):
         self.status = SUSCEPTIBLE
         self.infection_length = infection_length
@@ -121,14 +74,7 @@ class Person:
         self.set_probabilities(probabilities)
 
     def set_probabilities(self, probabilities):
-        """This part of the code assigns the people in the simulation probabilities of
-        recovering from the virus, becoming infected
-        with the virus and the probabilty of them dying if they catch the virus.
-        These probabilities use real world statistics based on
-        the UK and are dependent on age.
-        For example, under 50's have a 70% chance of recovering from the virus,
-        40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
-        # Death statistics based off covid related data on mortality rates of different ages
+        # Assigns the input probabilities for each state to the different age ranges
         for age, p in probabilities["Infection"].items():
             if self.age < int(age):
                 self.infection_probability = p
@@ -148,8 +94,14 @@ class Person:
         self.status = status
 
 
+# Measure class
 class Measure:
-
+    """
+    The Measure class is used to emulate different scenarios that could be implemented during an epidemic to help combat
+    the spread of a virus.
+    These are also modeled by changing probabilities.
+    However, these will change all persons attributes for the set number of days the measure will last for.
+    """
     def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5, probability_attr='infection_probability'):
         self.start_dates = start_dates
         self.end_dates = end_dates
@@ -181,7 +133,7 @@ class Measure:
                 setattr(pop[i, j], self.probability_attr, new_probability)
         return pop
 
-
+# Series of subclasses of the Measure Class, representing different epidemic scenarios
 class Lockdown(Measure):
     def __init__(self, starts=(25,), ends=(75,), multiplier=0.5):
         super().__init__(starts, ends, multiplier, 'infection_probability')
@@ -202,67 +154,17 @@ class Ventilators(Measure):
         super().__init__(starts, ends, multiplier, 'death_probability')
 
 
-# ----------------------------------------------------------------------------#
-#                   Simulation class                                          #
-# ----------------------------------------------------------------------------#
-
-
 class Simulation:
-    """Simulation of an epidemic on a 2D grid
+    """
+    The simulation class is used to create the different matrices required to produce the animated simulation
+    The status matrix stores the current status of all people in the population.
+    This is updated every time step, where the different probabilities determine how the virus spreads.
+    Any individual has the chance to infect any susceptible neighbours.
+    In this case, this will include any person immediately in any one direction, including 1 diagonally.
 
-    In this model there are four states:
-    susceptible (S), infected (I), recovered (R) and dead (D).
-
-    The people are arranged in a grid in each state so e.g. if we have a 4x4
-    grid the initial state might be like:
-
-    S S S S
-    S S I S
-    S S S S
-    S S S S
-
-    The update() method advances the simulation by one day. For example the
-    new state might be:
-
-    S S S S
-    S I R S
-    S S S I
-    S S S S
-
-    Here the person who was infected (I) is now recovered (R). However two of
-    their neighbours who were susceptible (S) are now infected (I).
-
-    The state update is not deterministic and is given by probabilities
-    according to the following rules:
-
-    1) Infected: an infected person might recover (-> R) with probability given
-    by the recovery_probability parameter (default 0.1)
-
-    2) Infected: if an infected person does not recover then they might die (-> D)
-    with probability death_propability (default 0.005)
-
-    3) Susceptible: a susceptible person might get infected (-> I) by one of
-    their 8 neighbours in the grid. If N of their neighbours are infected then
-    they will become infected with probability N*infection_probability where
-    infection_probability is a simulation parameter (default 0.1)
-
-    The methods get_rgb_matrix() and get_percentage_status() can be used to
-    query the state of the simulation at any time.
-
-    Example
-    =======
-
-    Create a simulation on a 10x10 grid (with 100 people) and 3 people initially
-    infected. Run the simulation for 10 days and then ask what percentage of
-    people are in each state:
-
-    >>> sim = Simulation(10, 10)
-    >>> sim.infect_randomly(3)  # infect three people (chosen randomly)
-    >>> for n in range(10):     # advance the simulation through 10 days
-    ...     sim.update()
-    >>> sim.get_count_status()
-    {'susceptible': 90.0, 'infected': 6.0, 'recovered': 3.0, 'dead': 1.0}
-
+    An rgb matrix is also formed, to allow us to better visually show the spread of the virus.
+    Each state of a person is represented by a different colour, and the age by a different shade.
+    This can then be used to produce the animation grid using Matplotlib
     """
 
     # Status codes to store in the numpy array representing the state.
@@ -313,21 +215,19 @@ class Simulation:
                          Ventilators(**kwargs["measures"]["Ventilators"])]
 
     def infect_randomly(self, num):
-        """Choose num people randomly and make them infected"""
         for n in range(num):
-            # Choose a random x, y coordinate and make that person infected
-            # NOTE: This might select the same person twice...
+            # Choose a random x, y coordinate and make that person infected, do this n number of times
             i = randint(self.width)
             j = randint(self.height)
             self.pop[i, j].set_status(self.INFECTED)
 
     def update(self):
-        """Advance the simulation by one day"""
+        # Advance the simulation by one day
+        old_pop = self.pop
+        new_pop = old_pop.copy()
         # Use a copy of the old state to store the new state so that e.g. if
         # someone recovers but was infected yesterday their neighbours might
         # still become infected today.
-        old_pop = self.pop
-        new_pop = old_pop.copy()
         if self.vaccinator.start_time <= self.day:
             new_pop = self.vaccinator.vaccinate(old_pop)
 
@@ -341,7 +241,7 @@ class Simulation:
         self.day += 1
 
     def set_new_status(self, pop, i, j):
-        """Compute new status for person at i, j in the grid"""
+        #Compute new status for person at i, j in the grid
         person = pop[i, j]
 
         # Update infected person
@@ -358,9 +258,7 @@ class Simulation:
                 person.set_status(self.INFECTED)
 
     def num_infected_around(self, pop, i, j):
-        """Count the number of infected people around person i, j"""
-
-        # Need to be careful about people at the edge of the grid.
+        #Count the number of infected people around person i, j
         # ivals and jvals are the coordinates of neighbours around i, j
         ivals = range(max(i - 1, 0), min(i + 2, self.width))
         jvals = range(max(j - 1, 0), min(j + 2, self.height))
@@ -371,13 +269,11 @@ class Simulation:
                 if (ip, jp) != (i, j):
                     if pop[ip, jp].status == self.INFECTED:
                         number += 1
-
         return number
 
     def get_count_status(self):
-        """Dict giving counts of people's status"""
+        #Dictionary giving counts of people's status
 
-        # NOTE: Maybe it's better to return counts rather than percentages...
         simgrid = self.get_status_grid()
         total = self.width * self.height
         counts = {}
@@ -386,15 +282,8 @@ class Simulation:
         return counts
 
     def get_rgb_matrix(self):
-        """RGB matrix representing the statuses of the people in the grid
-
-        This represents the state as an RGB (colour) matrix using the
-        coloursceheme set in the class variables COLOURMAP and COLOURMAP_RGB.
-        The resulting matrix is suitable to be used with e.g. matplotlib's
-        imshow function.
-        """
         rgb_matrix = np.zeros((self.width, self.height, 3), int)
-        code_to_status = {v: k for k, v in self.STATUSES.items()}
+        code_to_status = {v: k for k, v in self.STATUSES.items()} # Gets rbg data from previously declared colour scheme
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
                 person = self.pop[i, j]
@@ -403,6 +292,7 @@ class Simulation:
                 colour_rgb = self.COLOURMAP_RGB[colour_name]
                 age_adjusted_colour_rgb = [c - age if c != 0 else 0 for c in colour_rgb]
                 rgb_matrix[i, j] = age_adjusted_colour_rgb
+                #Prodcues a darker shade for older ages by taking their age value away from their rgb value
         return rgb_matrix
 
     def get_status_grid(self):

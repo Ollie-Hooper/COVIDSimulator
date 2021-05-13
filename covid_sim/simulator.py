@@ -111,21 +111,20 @@ class Vaccinator:
 class Person:
 
     def __init__(self, infection_length=14):
-        self.status = SUSCEPTIBLE 
+        self.status = SUSCEPTIBLE
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
                                  p=[0.22, 0.12, 0.31, 0.22, 0.13]))
         self.set_probabilities()
 
-   
-"""This part of the code assigns the people in the simulation probabilities of 
-recovering from the virus, becoming infected 
-with the virus and the probabilty of them dying if they catch the virus.
-These probabilities use real world statistics based on 
-the UK and are dependent on age.
-For example, under 50's have a 70% chance of recovering from the virus,
-40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
-    
+    """This part of the code assigns the people in the simulation probabilities of 
+    recovering from the virus, becoming infected 
+    with the virus and the probabilty of them dying if they catch the virus.
+    These probabilities use real world statistics based on 
+    the UK and are dependent on age.
+    For example, under 50's have a 70% chance of recovering from the virus,
+    40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
+
     def set_probabilities(self):
         if self.age < 50:
             self.recovery_probability = 0.7 / self.infection_length
@@ -195,13 +194,16 @@ class SocialDistancing(Measure):
     def __init__(self, start_dates=(10,), end_dates=(None,), multiplier=0.5):
         super().__init__(start_dates, end_dates, multiplier, 'infected_probability')
 
+
 class ImprovedTreatment(Measure):
     def __init__(self, start_dates=(50,), end_dates=(None,), multiplier=1.25):
         super().__init__(start_dates, end_dates, multiplier, 'recovery_probability')
 
+
 class Ventilators(Measure):
     def __init__(self, start_dates=(0,), end_dates=(None,), multiplier=0.6):
-        super(_).__init__(start_dates, end_dates, multiplier, 'death_probability')  
+        super().__init__(start_dates, end_dates, multiplier, 'death_probability')
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #

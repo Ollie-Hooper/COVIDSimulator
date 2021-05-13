@@ -187,6 +187,10 @@ class SocialDistancing(Measure):
     def __init__(self, start_dates=(10,), end_dates=(None,), multiplier=0.5):
         super().__init__(start_dates, end_dates, multiplier, 'infected_probability')
 
+class ImprovedTreatment(Measure):
+    def __init__(self, start_dates=(50,), end_dates=(None,), multiplier=1.25):
+        super().__init__(start_dates, end_dates, multiplier, 'recovery_probability')
+
 
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #
@@ -297,7 +301,7 @@ class Simulation:
                 self.pop[i, j] = Person()
 
         self.vaccinator = Vaccinator()
-        self.measures = [Lockdown(), SocialDistancing()]
+        self.measures = [Lockdown(), SocialDistancing(), ImprovedTreatment()]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

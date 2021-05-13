@@ -1,6 +1,9 @@
+import matplotlib
 import webbrowser
 
 from web_app.app import get_app
+
+matplotlib.use('agg')
 
 defaults = {
     "size": 50,

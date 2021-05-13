@@ -6,13 +6,13 @@ import dash_bootstrap_components as dbc
 def get_layout(defaults):
     return dbc.Container([
         dbc.Container([
-            html.H1("COVID Simulator"),
+            html.H1("FCP - Simulating COVID-19"),
             html.H2("by Ollie Hooper, Abbie Backers, Josh Smith and Adam Morris"),
         ]),
         html.Br(),
         dbc.Container([
             dbc.InputGroup([
-                dbc.InputGroupAddon("Size", addon_type="prepend"),
+                dbc.InputGroupAddon("Size (Dimension)", addon_type="prepend"),
                 dbc.Input(value=defaults["size"], type="number", min=0, step=1, id="num-size"),
             ]),
             dbc.InputGroup([
@@ -150,5 +150,10 @@ def get_layout(defaults):
                     dbc.Label(id='lbl-status')
                 ])
             ])
+        ]),
+        html.Br(),
+        dbc.Container([
+            html.Img(id="img-animation"),
+            html.Img(id="img-plot"),
         ])
     ])

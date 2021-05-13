@@ -12,7 +12,7 @@ def get_layout(defaults):
         html.Br(),
         dbc.Container([
             dbc.InputGroup([
-                dbc.InputGroupAddon("Size", addon_type="prepend"),
+                dbc.InputGroupAddon("Size (Dimension)", addon_type="prepend"),
                 dbc.Input(value=defaults["size"], type="number", min=0, step=1, id="num-size"),
             ]),
             dbc.InputGroup([

@@ -297,7 +297,7 @@ class Simulation:
                 self.pop[i, j] = Person()
 
         self.vaccinator = Vaccinator()
-        self.measures = [Lockdown()]
+        self.measures = [Lockdown(), SocialDistancing()]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

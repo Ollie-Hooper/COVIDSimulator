@@ -37,8 +37,7 @@ def main(*args):
     args = parser.parse_args(args)
 
     # Set up the simulation
-    simulation = Simulation(args.size, args.size,
-                            args.recovery, args.infection, args.death)
+    simulation = Simulation(args.size, args.size)
     simulation.infect_randomly(args.cases)
 
     # Plot or animation?

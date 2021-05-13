@@ -115,33 +115,100 @@ class Person:
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
                                  p=[0.22, 0.12, 0.31, 0.22, 0.13]))
+        self.recovery_probability = 0
+        self.infection_probability = 0
+        self.death_probability = 0
         self.set_probabilities()
 
-    # probabilities of age based on age group
+    """This part of the code assigns the people in the simulation probabilities of 
+    recovering from the virus, becoming infected 
+    with the virus and the probabilty of them dying if they catch the virus.
+    These probabilities use real world statistics based on 
+    the UK and are dependent on age.
+    For example, under 50's have a 70% chance of recovering from the virus,
+    40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
+
     def set_probabilities(self):
+        # Death statistics based off covid related data on mortality rates of different ages
         if self.age < 50:
-            self.recovery_probability = 0.7 / self.infection_length
-            self.infected_probability = 0.4 / self.infection_length
-            self.death_probability = 0.01 / self.infection_length
+            self.recovery_probability = 0.7
+            self.infection_probability = 0.1
+            self.death_probability = 0.01
         elif self.age < 60:
-            self.recovery_probability = 0.7 / self.infection_length
-            self.infected_probability = 0.4 / self.infection_length
-            self.death_probability = 0.02 / self.infection_length
+            self.recovery_probability = 0.7
+            self.infection_probability = 0.1
+            self.death_probability = 0.02
         elif self.age < 70:
-            self.recovery_probability = 0.7 / self.infection_length
-            self.infected_probability = 0.4 / self.infection_length  # Death statistics based off covid related data on mortality rates of different ages
-            self.death_probability = 0.04 / self.infection_length
+            self.recovery_probability = 0.7
+            self.infection_probability = 0.1
+            self.death_probability = 0.04
         elif self.age < 80:
-            self.recovery_probability = 0.7 / self.infection_length
-            self.infected_probability = 0.4 / self.infection_length
-            self.death_probability = 0.08 / self.infection_length
+            self.recovery_probability = 0.7
+            self.infection_probability = 0.1
+            self.death_probability = 0.08
         elif self.age <= 100:
-            self.recovery_probability = 0.7 / self.infection_length
-            self.infected_probability = 0.4 / self.infection_length
-            self.death_probability = 0.15 / self.infection_length
+            self.recovery_probability = 0.7
+            self.infection_probability = 0.1
+            self.death_probability = 0.15
+        self.recovery_probability /= self.infection_length
+        self.death_probability /= self.infection_length
 
     def set_status(self, status):
         self.status = status
+
+
+class Measure:
+
+    def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5, probability_attr='infection_probability'):
+        self.start_dates = start_dates
+        self.end_dates = end_dates
+        self.multiplier = multiplier  # chosen probabilities
+        self.probability_attr = probability_attr
+
+    def update(self, pop, date):
+        if date in self.start_dates:
+            new_pop = self.start(pop.copy())
+        elif date in self.end_dates:  # Updates population attributes when Measure date is reached
+            new_pop = self.stop(pop.copy())
+        else:
+            new_pop = pop.copy()
+        return new_pop
+
+    def start(self, pop):
+        for i in range(len(pop)):
+            for j in range(len(pop)):
+                old_probability = getattr(pop[i, j], self.probability_attr)
+                new_probability = old_probability * self.multiplier
+                setattr(pop[i, j], self.probability_attr, new_probability)
+        return pop
+
+    def stop(self, pop):
+        for i in range(len(pop)):
+            for j in range(len(pop[i])):
+                old_probability = getattr(pop[i, j], self.probability_attr)
+                new_probability = old_probability / self.multiplier
+                setattr(pop[i, j], self.probability_attr, new_probability)
+        return pop
+
+
+class Lockdown(Measure):
+    def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5):
+        super().__init__(start_dates, end_dates, multiplier, 'infection_probability')
+
+
+class SocialDistancing(Measure):
+    def __init__(self, start_dates=(10,), end_dates=(None,), multiplier=0.5):
+        super().__init__(start_dates, end_dates, multiplier, 'infection_probability')
+
+
+class ImprovedTreatment(Measure):
+    def __init__(self, start_dates=(50,), end_dates=(None,), multiplier=1.25):
+        super().__init__(start_dates, end_dates, multiplier, 'recovery_probability')
+
+
+class Ventilators(Measure):
+    def __init__(self, start_dates=(0,), end_dates=(None,), multiplier=0.6):
+        super().__init__(start_dates, end_dates, multiplier, 'death_probability')
 
 
 # ----------------------------------------------------------------------------#
@@ -194,12 +261,11 @@ class Simulation:
     Example
     =======
 
-    Create a simulation on a 10x10 grid (with 100 people) with probabilities
-    0.1, 0.2 and 0.05 for recovery, infection and death and 3 people initially
+    Create a simulation on a 10x10 grid (with 100 people) and 3 people initially
     infected. Run the simulation for 10 days and then ask what percentage of
     people are in each state:
 
-    >>> sim = Simulation(10, 10, recovery=0.1, infection=0.2, death=0.05)
+    >>> sim = Simulation(10, 10)
     >>> sim.infect_randomly(3)  # infect three people (chosen randomly)
     >>> for n in range(10):     # advance the simulation through 10 days
     ...     sim.update()
@@ -237,14 +303,11 @@ class Simulation:
         'yellow': (255, 255, 0),
     }
 
-    def __init__(self, width, height, recovery, infection, death):
+    def __init__(self, width, height):
         # Basic simulation parameters:
         self.day = 0
         self.width = width
         self.height = height
-        self.recovery_probability = recovery
-        self.infection_probability = infection
-        self.death_probability = death
 
         # Initialise Population (everyone susceptible with range of ages assigned to each element)
         self.pop = np.zeros((width, height), dtype=Person)
@@ -253,6 +316,7 @@ class Simulation:
                 self.pop[i, j] = Person()
 
         self.vaccinator = Vaccinator()
+        self.measures = [Lockdown(), SocialDistancing(), ImprovedTreatment(), Ventilators()]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""
@@ -272,6 +336,10 @@ class Simulation:
         new_pop = old_pop.copy()
         if self.vaccinator.start_time <= self.day:
             new_pop = self.vaccinator.vaccinate(old_pop)
+
+        for measure in self.measures:
+            new_pop = measure.update(new_pop, self.day)
+
         for i in range(self.width):
             for j in range(self.height):
                 self.set_new_status(new_pop, i, j)
@@ -292,7 +360,7 @@ class Simulation:
         # Update susceptible person
         elif person.status == self.SUSCEPTIBLE:
             num = self.num_infected_around(pop, i, j)
-            if num * self.infection_probability > random():
+            if num * person.infection_probability > random():
                 person.set_status(self.INFECTED)
 
     def num_infected_around(self, pop, i, j):

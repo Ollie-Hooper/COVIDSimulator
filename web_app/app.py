@@ -24,7 +24,7 @@ def get_app(defaults):
          State('num-size', 'value'),
          State('num-duration', 'value'),
          State('num-cases', 'value'),
-         State('num-length', 'value')
+         State('num-length', 'value'),
          *[State(f'num-{prob}-{age}', 'value') for prob, probs in
            defaults["probabilities"].items() for age in
            probs.keys()],

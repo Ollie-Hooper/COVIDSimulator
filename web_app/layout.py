@@ -150,5 +150,10 @@ def get_layout(defaults):
                     dbc.Label(id='lbl-status')
                 ])
             ])
+        ]),
+        html.Br(),
+        dbc.Container([
+            html.Img(id="img-animation"),
+            html.Img(id="img-plot"),
         ])
     ])

@@ -16,10 +16,14 @@ def get_app(defaults):
     app.layout = get_layout(defaults=defaults)
 
     @app.callback(
-        Output('lbl-status', 'children'),
+        [Output('lbl-status', 'children'),
+         Output('img-animation', 'src'),
+         Output('img-plot', 'src')],
         [Input('btn-anim', 'n_clicks'),
          Input('btn-plot', 'n_clicks')],
-        [State('txt-anim-fname', 'value'),
+        [State('img-animation', 'src'),
+         State('img-plot', 'src'),
+         State('txt-anim-fname', 'value'),
          State('txt-plot-fname', 'value'),
          State('num-size', 'value'),
          State('num-duration', 'value'),
@@ -34,7 +38,7 @@ def get_app(defaults):
            values.keys()],
          ]
     )
-    def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):
+    def run(btn_anim, btn_plot, anim_src, plot_src, anim_fname, plot_fname, *args):
         ctx = dash.callback_context
 
         if not ctx.triggered:
@@ -55,17 +59,17 @@ def get_app(defaults):
             animation = Animation(simulation, duration=kwargs["duration"])
 
             if anim_fname is None:
-                animation.show()
-                return "Finished showing animation"
+                animation.save("web_app/assets/anim.gif")
+                return "Finished generating animation", app.get_asset_url("anim.gif"), plot_src
             else:
                 animation.save(anim_fname)
-                return f"Finished saving animation in {anim_fname}"
+                return f"Finished saving animation in {anim_fname}", anim_src, plot_src
         elif btn == 'plot':
             fig = plot_simulation(simulation, 100)
 
             if plot_fname is None:
-                plt.show()
-                return "Finished showing plot"
+                fig.savefig("web_app/assets/plot.png")
+                return "Finished generating plot", anim_src, app.get_asset_url("plot.png")
             else:
                 fig.savefig(plot_fname)
                 return f"Finished saving plot in {plot_fname}"

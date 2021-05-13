@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+from matplotlib.animation import FuncAnimation, PillowWriter
 
 
 class Animation:
@@ -49,7 +49,8 @@ class Animation:
         # NOTE: needs ffmpeg installed and on PATH
         animation = FuncAnimation(self.figure, self.update, frames=range(100),
                                   init_func=self.init, blit=True, interval=300)
-        animation.save(filename, fps=30, extra_args=['-vcodec', 'libx264'])
+        writergif = PillowWriter(fps=30)
+        animation.save(filename, writer=writergif)
 
     def init(self):
         """Initialise the animation (called by FuncAnimation)"""

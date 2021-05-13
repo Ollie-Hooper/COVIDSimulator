@@ -400,15 +400,19 @@ class Simulation:
         imshow function.
         """
         rgb_matrix = np.zeros((self.width, self.height, 3), int)
-        for status, statusnum in self.STATUSES.items():
-            colour_name = self.COLOURMAP[status]
-            colour_rgb = self.COLOURMAP_RGB[colour_name]
-            rgb_matrix[self.get_status_grid() == statusnum] = colour_rgb
+        code_to_status = {v: k for k, v in self.STATUSES.items()}
+        for i in range(len(self.pop)):
+            for j in range(len(self.pop[i])):
+                person = self.pop[i, j]
+                age = person.age
+                colour_name = self.COLOURMAP[code_to_status[person.status]]
+                colour_rgb = self.COLOURMAP_RGB[colour_name]
+                age_adjusted_colour_rgb = [c - age if c != 0 else 0 for c in colour_rgb]
+                rgb_matrix[i, j] = age_adjusted_colour_rgb
         return rgb_matrix
 
     def get_status_grid(self):
         state = np.zeros(self.pop.shape)
-
         for i in range(len(state)):
             for j in range(len(state[i])):
                 state[i, j] = self.pop[i, j].status

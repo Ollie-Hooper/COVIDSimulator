@@ -183,23 +183,23 @@ class Measure:
 
 
 class Lockdown(Measure):
-    def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5):
-        super().__init__(start_dates, end_dates, multiplier, 'infection_probability')
+    def __init__(self, starts=(25,), ends=(75,), multiplier=0.5):
+        super().__init__(starts, ends, multiplier, 'infection_probability')
 
 
 class SocialDistancing(Measure):
-    def __init__(self, start_dates=(10,), end_dates=(None,), multiplier=0.5):
-        super().__init__(start_dates, end_dates, multiplier, 'infection_probability')
+    def __init__(self, starts=(10,), ends=(), multiplier=0.5):
+        super().__init__(starts, ends, multiplier, 'infection_probability')
 
 
 class ImprovedTreatment(Measure):
-    def __init__(self, start_dates=(50,), end_dates=(None,), multiplier=1.25):
-        super().__init__(start_dates, end_dates, multiplier, 'recovery_probability')
+    def __init__(self, starts=(50,), ends=(), multiplier=1.25):
+        super().__init__(starts, ends, multiplier, 'recovery_probability')
 
 
 class Ventilators(Measure):
-    def __init__(self, start_dates=(0,), end_dates=(None,), multiplier=0.6):
-        super().__init__(start_dates, end_dates, multiplier, 'death_probability')
+    def __init__(self, starts=(0,), ends=(), multiplier=0.6):
+        super().__init__(starts, ends, multiplier, 'death_probability')
 
 
 # ----------------------------------------------------------------------------#
@@ -307,7 +307,10 @@ class Simulation:
                 self.pop[i, j] = Person(kwargs["probabilities"])
 
         self.vaccinator = Vaccinator(**kwargs["vaccinator"])
-        self.measures = [Lockdown(), SocialDistancing(), ImprovedTreatment(), Ventilators()]
+        self.measures = [Lockdown(**kwargs["measures"]["Lockdown"]),
+                         SocialDistancing(**kwargs["measures"]["Social Distancing"]),
+                         ImprovedTreatment(**kwargs["measures"]["Improved Treatment"]),
+                         Ventilators(**kwargs["measures"]["Ventilators"])]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

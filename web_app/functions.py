@@ -30,4 +30,5 @@ def parse_measures(kwargs):
         else:
             kwargs["measures"][measure]["starts"] = []
             kwargs["measures"][measure]["ends"] = []
+        del kwargs["measures"][measure]["enabled"]
     return kwargs

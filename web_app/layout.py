@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 def get_layout(defaults):
     return dbc.Container([
         dbc.Container([
-            html.H1("COVID Simulator"),
+            html.H1("FCP - Simulating COVID-19"),
             html.H2("by Ollie Hooper, Abbie Backers, Josh Smith and Adam Morris"),
         ]),
         html.Br(),

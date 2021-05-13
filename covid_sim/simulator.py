@@ -183,6 +183,11 @@ class Lockdown(Measure):
         super().__init__(start_dates, end_dates, multiplier, 'infected_probability')
 
 
+class SocialDistancing(Measure):
+    def __init__(self, start_dates=(10,), end_dates=(None,), multiplier=0.5):
+        super().__init__(start_dates, end_dates, multiplier, 'infected_probability')
+
+
 # ----------------------------------------------------------------------------#
 #                   Simulation class                                          #
 # ----------------------------------------------------------------------------#

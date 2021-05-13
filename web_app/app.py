@@ -73,4 +73,14 @@ def get_app(defaults):
             return not is_open
         return is_open
 
+    @app.callback(
+        Output("clp-vaccinator", "is_open"),
+        [Input("btn-vaccinator", "n_clicks")],
+        [State("clp-vaccinator", "is_open")],
+    )
+    def toggle_vaccinator_collapse(n, is_open):
+        if n:
+            return not is_open
+        return is_open
+
     return app

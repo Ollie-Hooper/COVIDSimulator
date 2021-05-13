@@ -9,19 +9,22 @@ from covid_sim.simulator import Simulation
 from web_app.layout import get_layout
 
 
-def get_app():
+def get_app(defaults):
     app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
     app.title = "COVID Simulator"
-    app.layout = get_layout()
+    app.layout = get_layout(defaults=defaults)
 
     @app.callback(
         Output('lbl-status', 'children'),
         [Input('btn-anim', 'n_clicks'),
          Input('btn-plot', 'n_clicks')],
         [State('txt-anim-fname', 'value'),
-         State('txt-plot-fname', 'value')]
+         State('txt-plot-fname', 'value'),
+         State('num-size', 'value'),
+         State('num-duration', 'value'),
+         State('num-cases', 'value')]
     )
-    def run(btn_anim, btn_plot, anim_fname, plot_fname):
+    def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):
         ctx = dash.callback_context
 
         if not ctx.triggered:
@@ -29,12 +32,15 @@ def get_app():
         else:
             btn = '-'.join(ctx.triggered[0]['prop_id'].split('.')[0].split('-')[1:])
 
+        input_names = defaults.keys()
+        kwargs = dict(zip(input_names, args))
+
         # Set up the simulation
-        simulation = Simulation(50, 50, 0.1, 0.1, 0.005)
-        simulation.infect_randomly(2)
+        simulation = Simulation(kwargs["size"], kwargs["size"], 0.1, 0.1, 0.005)
+        simulation.infect_randomly(kwargs["cases"])
 
         if btn == 'anim':
-            animation = Animation(simulation, 100)
+            animation = Animation(simulation, duration=kwargs["duration"])
 
             if anim_fname is None:
                 animation.show()

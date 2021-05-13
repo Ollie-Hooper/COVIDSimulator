@@ -3,12 +3,23 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 
 
-def get_layout():
+def get_layout(defaults):
     return dbc.Container([
         dbc.Row([
             dbc.Col([
                 dbc.Container([
-
+                    dbc.InputGroup([
+                        dbc.InputGroupAddon("Size", addon_type="prepend"),
+                        dbc.Input(value=defaults["size"], type="number", min=0, step=1, id="num-size"),
+                    ]),
+                    dbc.InputGroup([
+                        dbc.InputGroupAddon("Duration", addon_type="prepend"),
+                        dbc.Input(value=defaults["duration"], type="number", min=0, step=1, id="num-duration"),
+                    ]),
+                    dbc.InputGroup([
+                        dbc.InputGroupAddon("Initial cases", addon_type="prepend"),
+                        dbc.Input(value=defaults["cases"], type="number", min=0, step=1, id="num-cases"),
+                    ]),
                 ])
             ]),
             dbc.Col([

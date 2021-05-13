@@ -407,7 +407,7 @@ class Simulation:
                 age = person.age
                 colour_name = self.COLOURMAP[code_to_status[person.status]]
                 colour_rgb = self.COLOURMAP_RGB[colour_name]
-                age_adjusted_colour_rgb = [c -age if c != 0 else 0 for c in colour_rgb]
+                age_adjusted_colour_rgb = [c - age if c != 0 else 0 for c in colour_rgb]
                 rgb_matrix[i, j] = age_adjusted_colour_rgb
         return rgb_matrix
 

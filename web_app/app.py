@@ -31,7 +31,6 @@ def get_app(defaults):
          *[State(f'num-measures-{measure}-{k}', 'value') for measure, values in
            defaults["measures"].items() for k in
            values.keys()],
-         #*[State(f'swt-measures-{k}', 'value') for k in defaults["measures"].keys()]
          ]
     )
     def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):

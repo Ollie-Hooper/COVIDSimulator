@@ -1,74 +1,36 @@
-import argparse
+import webbrowser
 
-from covid_sim.simulator import Simulation
-from covid_sim.animation import plot_simulation, Animation
+from web_app.app import get_app
+
+defaults = {
+    "size": 50,
+    "duration": 100,
+    "cases": 2,
+    "length": 14,
+    "probabilities": {
+        "Infection": {50: 0.1, 60: 0.1, 70: 0.1, 80: 0.1, 100: 0.1},
+        "Recovery": {50: 0.7, 60: 0.7, 70: 0.7, 80: 0.7, 100: 0.7},
+        "Death": {50: 0.01, 60: 0.02, 70: 0.04, 80: 0.08, 100: 0.15},
+    },
+    "vaccinator": {
+        "start": 20,
+        "rate": 0.25,
+        "max": 20,
+    },
+    "measures": {
+        "Lockdown": {"enabled": False, "starts": [25], "ends": [75], "multiplier": 0.5},
+        "Social Distancing": {"enabled": False, "starts": [10], "ends": [], "multiplier": 0.5},
+        "Improved Treatment": {"enabled": True, "starts": [50], "ends": [], "multiplier": 1.25},
+        "Ventilators": {"enabled": False, "starts": [0], "ends": [], "multiplier": 0.6},
+    }
+}
 
 
-def main(*args):
-    """Command line entry point.
-
-    $ python simulator.py                        # show animation on screen
-    $ python simulator.py --file=video.mp4       # save animation to video
-    $ python simulator.py --plot                 # show plot on screen
-    $ python simulator.py --plot --file=plot.pdf # save plot to pdf
-
-    """
-    #
-    # Use argparse to handle parsing the command line arguments.
-    #   https://docs.python.org/3/library/argparse.html
-    #
-    parser = argparse.ArgumentParser(description='Animate an epidemic')
-    parser.add_argument('--size', metavar='N', type=int, default=50,
-                        help='Use a N x N simulation grid')
-    parser.add_argument('--duration', metavar='T', type=int, default=100,
-                        help='Simulate for T days')
-    parser.add_argument('--recovery', metavar='P', type=float, default=0.1,
-                        help='Probability of recovery (per day)')
-    parser.add_argument('--infection', metavar='P', type=float, default=0.1,
-                        help='Probability of infecting a neighbour (per day)')
-    parser.add_argument('--death', metavar='P', type=float, default=0.005,
-                        help='Probability of dying when infected (per day)')
-    parser.add_argument('--cases', metavar='N', type=int, default=2,
-                        help='Number of initial infected people')
-    parser.add_argument('--plot', action='store_true',
-                        help='Generate plots instead of an animation')
-    parser.add_argument('--file', metavar='N', type=str, default=None,
-                        help='Filename to save to instead of showing on screen')
-    args = parser.parse_args(args)
-
-    # Set up the simulation
-    simulation = Simulation(args.size, args.size)
-    simulation.infect_randomly(args.cases)
-
-    # Plot or animation?
-    import matplotlib as plt
-    if args.plot:
-        fig = plot_simulation(simulation, args.duration)
-
-        if args.file is None:
-            #  python simulator.py --plot
-            plt.show()
-        else:
-            #  python simulator.py --plot --file=plot.pdf
-            fig.savefig(args.file)
-    else:
-        animation = Animation(simulation, args.duration)
-
-        if args.file is None:
-            #  python simulator.py
-            animation.show()
-        else:
-            #  python simulator.py --file=animation.mp4
-            #
-            # NOTE: this needs ffmpeg to be installed.
-            animation.save(args.file)
+def main():
+    app = get_app(defaults=defaults)
+    webbrowser.open("http://127.0.0.1:8050", new=1)
+    app.run_server()
 
 
 if __name__ == "__main__":
-    #
-    # CLI entry point. The main() function can also be imported and called
-    # with string arguments.
-    #
-    import sys
-
-    main(*sys.argv[1:])
+    main()

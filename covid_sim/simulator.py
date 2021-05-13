@@ -80,10 +80,10 @@ VACCINATED = 4
 
 # Vaccination class
 class Vaccinator:
-    def __init__(self, start_time=20, vaccination_capacity_rate=0.25, vaccination_max_capacity=20):
-        self.start_time = start_time  # Day the vaccine begins to be distributed
-        self.vaccination_capacity_rate = vaccination_capacity_rate  # How much to increase vaccination capacity each day
-        self.vaccination_max_capacity = vaccination_max_capacity  # Max vaccination capacity per day
+    def __init__(self, start=20, rate=0.25, max=20):
+        self.start_time = start  # Day the vaccine begins to be distributed
+        self.vaccination_capacity_rate = rate  # How much to increase vaccination capacity each day
+        self.vaccination_max_capacity = max  # Max vaccination capacity per day
         self.vaccination_capacity = 0
 
     def increase_capacity(self):
@@ -110,7 +110,7 @@ class Vaccinator:
 # Person class
 class Person:
 
-    def __init__(self, infection_length=14):
+    def __init__(self, probabilities, infection_length=14):
         self.status = SUSCEPTIBLE
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
@@ -118,38 +118,29 @@ class Person:
         self.recovery_probability = 0
         self.infection_probability = 0
         self.death_probability = 0
-        self.set_probabilities()
+        self.set_probabilities(probabilities)
 
-    """This part of the code assigns the people in the simulation probabilities of 
-    recovering from the virus, becoming infected 
-    with the virus and the probabilty of them dying if they catch the virus.
-    These probabilities use real world statistics based on 
-    the UK and are dependent on age.
-    For example, under 50's have a 70% chance of recovering from the virus,
-    40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
-
-    def set_probabilities(self):
+    def set_probabilities(self, probabilities):
+        """This part of the code assigns the people in the simulation probabilities of
+        recovering from the virus, becoming infected
+        with the virus and the probabilty of them dying if they catch the virus.
+        These probabilities use real world statistics based on
+        the UK and are dependent on age.
+        For example, under 50's have a 70% chance of recovering from the virus,
+        40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
         # Death statistics based off covid related data on mortality rates of different ages
-        if self.age < 50:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.01
-        elif self.age < 60:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.02
-        elif self.age < 70:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.04
-        elif self.age < 80:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.08
-        elif self.age <= 100:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.15
+        for age, p in probabilities["Infection"].items():
+            if self.age < int(age):
+                self.infection_probability = p
+                break
+        for age, p in probabilities["Recovery"].items():
+            if self.age < int(age):
+                self.recovery_probability = p
+                break
+        for age, p in probabilities["Death"].items():
+            if self.age < int(age):
+                self.death_probability = p
+                break
         self.recovery_probability /= self.infection_length
         self.death_probability /= self.infection_length
 
@@ -192,23 +183,23 @@ class Measure:
 
 
 class Lockdown(Measure):
-    def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5):
-        super().__init__(start_dates, end_dates, multiplier, 'infection_probability')
+    def __init__(self, starts=(25,), ends=(75,), multiplier=0.5):
+        super().__init__(starts, ends, multiplier, 'infection_probability')
 
 
 class SocialDistancing(Measure):
-    def __init__(self, start_dates=(10,), end_dates=(None,), multiplier=0.5):
-        super().__init__(start_dates, end_dates, multiplier, 'infection_probability')
+    def __init__(self, starts=(10,), ends=(), multiplier=0.5):
+        super().__init__(starts, ends, multiplier, 'infection_probability')
 
 
 class ImprovedTreatment(Measure):
-    def __init__(self, start_dates=(50,), end_dates=(None,), multiplier=1.25):
-        super().__init__(start_dates, end_dates, multiplier, 'recovery_probability')
+    def __init__(self, starts=(50,), ends=(), multiplier=1.25):
+        super().__init__(starts, ends, multiplier, 'recovery_probability')
 
 
 class Ventilators(Measure):
-    def __init__(self, start_dates=(0,), end_dates=(None,), multiplier=0.6):
-        super().__init__(start_dates, end_dates, multiplier, 'death_probability')
+    def __init__(self, starts=(0,), ends=(), multiplier=0.6):
+        super().__init__(starts, ends, multiplier, 'death_probability')
 
 
 # ----------------------------------------------------------------------------#
@@ -303,20 +294,23 @@ class Simulation:
         'yellow': (255, 255, 0),
     }
 
-    def __init__(self, width, height):
+    def __init__(self, **kwargs):
         # Basic simulation parameters:
         self.day = 0
-        self.width = width
-        self.height = height
+        self.width = kwargs["size"]
+        self.height = kwargs["size"]
 
         # Initialise Population (everyone susceptible with range of ages assigned to each element)
-        self.pop = np.zeros((width, height), dtype=Person)
+        self.pop = np.zeros((kwargs["size"], kwargs["size"]), dtype=Person)
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
-                self.pop[i, j] = Person()
+                self.pop[i, j] = Person(kwargs["probabilities"], kwargs["length"])
 
-        self.vaccinator = Vaccinator()
-        self.measures = [Lockdown(), SocialDistancing(), ImprovedTreatment(), Ventilators()]
+        self.vaccinator = Vaccinator(**kwargs["vaccinator"])
+        self.measures = [Lockdown(**kwargs["measures"]["Lockdown"]),
+                         SocialDistancing(**kwargs["measures"]["Social Distancing"]),
+                         ImprovedTreatment(**kwargs["measures"]["Improved Treatment"]),
+                         Ventilators(**kwargs["measures"]["Ventilators"])]
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

@@ -40,7 +40,7 @@ def get_layout(defaults):
                                 dbc.Row([
                                     dbc.Col([
                                         dbc.InputGroup([
-                                            dbc.InputGroupAddon(f"< {age}", addon_type="prepend"),
+                                            dbc.InputGroupAddon(f"Age < {age}", addon_type="prepend"),
                                             dbc.Input(value=p, type="number", min=0, step=0.01,
                                                       id=f"num-{prob}-{age}"),
                                         ])
@@ -121,7 +121,7 @@ def get_layout(defaults):
                         ])
                     ])
                 ]) for measure, kwargs in defaults["measures"].items()
-            ], is_open=True, id="clp-measures")
+            ], is_open=False, id="clp-measures")
         ]),
         html.Br(),
         dbc.Container([

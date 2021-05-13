@@ -27,6 +27,7 @@ def get_app(defaults):
          *[State(f'num-{prob}-{age}', 'value') for prob, probs in
            defaults["probabilities"].items() for age in
            probs.keys()],
+         *[State(f'num-vaccinator-{k}', 'value') for k in defaults["vaccinator"].keys()],
          ]
     )
     def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):

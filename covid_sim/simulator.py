@@ -80,10 +80,10 @@ VACCINATED = 4
 
 # Vaccination class
 class Vaccinator:
-    def __init__(self, start_time=20, vaccination_capacity_rate=0.25, vaccination_max_capacity=20):
-        self.start_time = start_time  # Day the vaccine begins to be distributed
-        self.vaccination_capacity_rate = vaccination_capacity_rate  # How much to increase vaccination capacity each day
-        self.vaccination_max_capacity = vaccination_max_capacity  # Max vaccination capacity per day
+    def __init__(self, start=20, rate=0.25, max=20):
+        self.start_time = start  # Day the vaccine begins to be distributed
+        self.vaccination_capacity_rate = rate  # How much to increase vaccination capacity each day
+        self.vaccination_max_capacity = max  # Max vaccination capacity per day
         self.vaccination_capacity = 0
 
     def increase_capacity(self):
@@ -246,7 +246,7 @@ class Simulation:
             for j in range(len(self.pop[i])):
                 self.pop[i, j] = Person(kwargs["probabilities"])
 
-        self.vaccinator = Vaccinator()
+        self.vaccinator = Vaccinator(**kwargs["vaccinator"])
 
     def infect_randomly(self, num):
         """Choose num people randomly and make them infected"""

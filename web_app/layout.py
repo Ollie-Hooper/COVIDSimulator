@@ -49,7 +49,33 @@ def get_layout(defaults):
             ]),
             dbc.Col([
                 dbc.Container([
-
+                    dbc.Button(
+                        "Vaccinator",
+                        id="btn-vaccinator",
+                        color="secondary",
+                    ),
+                    dbc.Collapse([
+                        dbc.Card([
+                            dbc.CardBody([
+                                dbc.InputGroup([
+                                    dbc.InputGroupAddon("Start day", addon_type="prepend"),
+                                    dbc.Input(value=defaults["vaccinator"]["start"], type="number", min=0, step=1,
+                                              id="num-vaccinator-start"),
+                                ]),
+                                dbc.InputGroup([
+                                    dbc.InputGroupAddon("Vaccination capacity increase rate (per day)",
+                                                        addon_type="prepend"),
+                                    dbc.Input(value=defaults["vaccinator"]["rate"], type="number", min=0, step=0.01,
+                                              id="num-vaccinator-rate"),
+                                ]),
+                                dbc.InputGroup([
+                                    dbc.InputGroupAddon("Max vaccination capacity (per day)", addon_type="prepend"),
+                                    dbc.Input(value=defaults["vaccinator"]["max"], type="number", min=0, step=1,
+                                              id="num-vaccinator-max"),
+                                ]),
+                            ])
+                        ])
+                    ], id="clp-vaccinator")
                 ])
             ]),
             dbc.Col([

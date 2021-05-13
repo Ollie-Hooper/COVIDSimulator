@@ -155,5 +155,8 @@ def get_layout(defaults):
         dbc.Container([
             html.Img(id="img-animation"),
             html.Img(id="img-plot"),
+        ]),
+        dbc.Container([
+            dcc.Markdown(open('README.md', 'r').read())
         ])
     ])

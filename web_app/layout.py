@@ -6,6 +6,11 @@ import dash_bootstrap_components as dbc
 def get_layout(defaults):
     return dbc.Container([
         dbc.Container([
+            html.H1("COVID Simulator"),
+            html.H2("by Ollie Hooper, Abbie Backers, Josh Smith and Adam Morris"),
+        ]),
+        html.Br(),
+        dbc.Container([
             dbc.InputGroup([
                 dbc.InputGroupAddon("Size", addon_type="prepend"),
                 dbc.Input(value=defaults["size"], type="number", min=0, step=1, id="num-size"),
@@ -17,7 +22,10 @@ def get_layout(defaults):
             dbc.InputGroup([
                 dbc.InputGroupAddon("Initial cases", addon_type="prepend"),
                 dbc.Input(value=defaults["cases"], type="number", min=0, step=1, id="num-cases"),
-            ]),
+            ])
+        ]),
+        html.Br(),
+        dbc.Container([
             dbc.Button(
                 "Probabilities",
                 id="btn-probabilities",
@@ -44,6 +52,7 @@ def get_layout(defaults):
                 ])
             ], is_open=True, id="clp-probabilities")
         ]),
+        html.Br(),
         dbc.Container([
             dbc.Button(
                 "Vaccinator",
@@ -73,6 +82,7 @@ def get_layout(defaults):
                 ])
             ], is_open=True, id="clp-vaccinator")
         ]),
+        html.Br(),
         dbc.Container([
             dbc.Row([
                 dbc.Col([

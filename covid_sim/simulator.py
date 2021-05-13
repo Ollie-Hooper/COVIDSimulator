@@ -304,7 +304,7 @@ class Simulation:
         self.pop = np.zeros((kwargs["size"], kwargs["size"]), dtype=Person)
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
-                self.pop[i, j] = Person(kwargs["probabilities"])
+                self.pop[i, j] = Person(kwargs["probabilities"], kwargs["length"])
 
         self.vaccinator = Vaccinator(**kwargs["vaccinator"])
         self.measures = [Lockdown(**kwargs["measures"]["Lockdown"]),

@@ -28,6 +28,10 @@ def get_app(defaults):
            defaults["probabilities"].items() for age in
            probs.keys()],
          *[State(f'num-vaccinator-{k}', 'value') for k in defaults["vaccinator"].keys()],
+         *[State(f'num-measures-{measure}-{k}', 'value') for measure, values in
+           defaults["measures"].items() for k in
+           values.keys()],
+         *[State(f'swt-measures-{k}', 'value') for k in defaults["measures"].keys()]
          ]
     )
     def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):
@@ -36,9 +40,9 @@ def get_app(defaults):
         if not ctx.triggered:
             raise PreventUpdate()
         else:
-            btn = '-'.join(ctx.triggered[0]['prop_id'].split('.')[0].split('-')[1:])
+            btn = '-'.join(ctx.triggered[0]["prop_id"].split('.')[0].split('-')[1:])
 
-        input_names = get_bottom_lvl_keys(defaults, [], [])
+        input_names = [*get_bottom_lvl_keys(defaults, [], []), *defaults["measures"].keys()]
         kwargs = unflatten_dict(dict(zip(input_names, args)))
 
         # Set up the simulation

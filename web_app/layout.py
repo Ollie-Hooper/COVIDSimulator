@@ -20,6 +20,32 @@ def get_layout(defaults):
                         dbc.InputGroupAddon("Initial cases", addon_type="prepend"),
                         dbc.Input(value=defaults["cases"], type="number", min=0, step=1, id="num-cases"),
                     ]),
+                    dbc.Button(
+                        "Probabilities",
+                        id="btn-probabilities",
+                        color="secondary",
+                    ),
+                    dbc.Collapse([
+                        dbc.Card([
+                            html.H5("Probabilities", className="card-title"),
+                            dbc.CardBody([
+                                dbc.Row([
+                                    dbc.Col([
+                                        dbc.Label(prob),
+                                        dbc.Row([
+                                            dbc.Col([
+                                                dbc.InputGroup([
+                                                    dbc.InputGroupAddon(f"< {age}", addon_type="prepend"),
+                                                    dbc.Input(value=p, type="number", min=0, step=0.01,
+                                                              id=f"num-{prob}-{age}"),
+                                                ])
+                                            ]) for age, p in probs.items()
+                                        ])
+                                    ]) for prob, probs in defaults["probabilities"].items()
+                                ])
+                            ])
+                        ])
+                    ])
                 ])
             ]),
             dbc.Col([

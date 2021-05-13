@@ -129,15 +129,15 @@ class Person:
         For example, under 50's have a 70% chance of recovering from the virus,
         40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
         # Death statistics based off covid related data on mortality rates of different ages
-        for age, p in probabilities["infection"].items():
+        for age, p in probabilities["Infection"].items():
             if self.age < int(age):
                 self.infection_probability = p
                 break
-        for age, p in probabilities["recovery"].items():
+        for age, p in probabilities["Recovery"].items():
             if self.age < int(age):
                 self.recovery_probability = p
                 break
-        for age, p in probabilities["death"].items():
+        for age, p in probabilities["Death"].items():
             if self.age < int(age):
                 self.death_probability = p
                 break

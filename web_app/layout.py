@@ -30,6 +30,11 @@ def get_layout():
                         dbc.Col([
                             dbc.Input(placeholder="File name/location", id="txt-plot-fname")
                         ])
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label(id='lbl-status')
+                        ])
                     ])
                 ], fluid=True)
             ])

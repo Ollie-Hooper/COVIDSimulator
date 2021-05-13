@@ -99,8 +99,8 @@ def get_layout(defaults):
                             dbc.Checklist(options=[
                                 {"label": "Enable?", "value": 1}
                             ],
-                                value=[],
-                                id=f"swt-measures-{measure}",
+                                value=[1] if defaults["measures"][measure]["enabled"] else [],
+                                id=f"num-measures-{measure}-enabled",
                                 switch=True
                             ),
                         ]),

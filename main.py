@@ -15,10 +15,10 @@ defaults = {
         "max": 20,
     },
     "measures": {
-        "Lockdown": {"starts": [25], "ends": [75], "multiplier": 0.5},
-        "Social Distancing": {"starts": [10], "ends": [], "multiplier": 0.5},
-        "Improved Treatment": {"starts": [50], "ends": [], "multiplier": 1.25},
-        "Ventilators": {"starts": [0], "ends": [], "multiplier": 0.6},
+        "Lockdown": {"enabled": False, "starts": [25], "ends": [75], "multiplier": 0.5},
+        "Social Distancing": {"enabled": False, "starts": [10], "ends": [], "multiplier": 0.5},
+        "Improved Treatment": {"enabled": True, "starts": [50], "ends": [], "multiplier": 1.25},
+        "Ventilators": {"enabled": False, "starts": [0], "ends": [], "multiplier": 0.6},
     }
 }
 

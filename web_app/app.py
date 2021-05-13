@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 
 from covid_sim.animation import Animation, plot_simulation
 from covid_sim.simulator import Simulation
-from web_app.functions import get_bottom_lvl_keys, unflatten_dict
+from web_app.functions import get_bottom_lvl_keys, unflatten_dict, parse_measures
 from web_app.layout import get_layout
 
 
@@ -31,7 +31,7 @@ def get_app(defaults):
          *[State(f'num-measures-{measure}-{k}', 'value') for measure, values in
            defaults["measures"].items() for k in
            values.keys()],
-         *[State(f'swt-measures-{k}', 'value') for k in defaults["measures"].keys()]
+         #*[State(f'swt-measures-{k}', 'value') for k in defaults["measures"].keys()]
          ]
     )
     def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):
@@ -42,8 +42,10 @@ def get_app(defaults):
         else:
             btn = '-'.join(ctx.triggered[0]["prop_id"].split('.')[0].split('-')[1:])
 
-        input_names = [*get_bottom_lvl_keys(defaults, [], []), *defaults["measures"].keys()]
+        input_names = get_bottom_lvl_keys(defaults, [], [])
         kwargs = unflatten_dict(dict(zip(input_names, args)))
+
+        kwargs = parse_measures(kwargs)
 
         # Set up the simulation
         simulation = Simulation(**kwargs)

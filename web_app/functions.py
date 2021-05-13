@@ -20,3 +20,14 @@ def split_key(k, v, n_d):
         split_key(k_rest[0], v, n_d.setdefault(k, {}))
     else:
         n_d[k] = v
+
+
+def parse_measures(kwargs):
+    for measure, values in kwargs["measures"].items():
+        if values["enabled"]:
+            kwargs["measures"][measure]["starts"] = eval(f"[{kwargs['measures'][measure]['starts']}]")
+            kwargs["measures"][measure]["ends"] = eval(f"[{kwargs['measures'][measure]['ends']}]")
+        else:
+            kwargs["measures"][measure]["starts"] = []
+            kwargs["measures"][measure]["ends"] = []
+    return kwargs

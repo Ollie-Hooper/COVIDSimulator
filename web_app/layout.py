@@ -45,7 +45,7 @@ def get_layout(defaults):
                                 ])
                             ])
                         ])
-                    ])
+                    ], id="clp-probabilities")
                 ])
             ]),
             dbc.Col([

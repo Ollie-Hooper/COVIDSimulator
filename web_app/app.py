@@ -58,4 +58,14 @@ def get_app(defaults):
                 fig.savefig(plot_fname)
                 return f"Finished saving plot in {plot_fname}"
 
+    @app.callback(
+        Output("clp-probabilities", "is_open"),
+        [Input("btn-probabilities", "n_clicks")],
+        [State("clp-probabilities", "is_open")],
+    )
+    def toggle_probabilities_collapse(n, is_open):
+        if n:
+            return not is_open
+        return is_open
+
     return app

@@ -13,6 +13,12 @@ defaults = {
         "start": 20,
         "rate": 0.25,
         "max": 20,
+    },
+    "measures": {
+        "Lockdown": {"starts": [25], "ends": [75], "multiplier": 0.5},
+        "Social Distancing": {"starts": [10], "ends": [], "multiplier": 0.5},
+        "Improved Treatment": {"starts": [50], "ends": [], "multiplier": 1.25},
+        "Ventilators": {"starts": [0], "ends": [], "multiplier": 0.6},
     }
 }
 

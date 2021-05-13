@@ -242,14 +242,14 @@ class Simulation:
         'yellow': (255, 255, 0),
     }
 
-    def __init__(self, width, height):
+    def __init__(self, **kwargs):
         # Basic simulation parameters:
         self.day = 0
-        self.width = width
-        self.height = height
+        self.width = kwargs["size"]
+        self.height = kwargs["size"]
 
         # Initialise Population (everyone susceptible with range of ages assigned to each element)
-        self.pop = np.zeros((width, height), dtype=Person)
+        self.pop = np.zeros((kwargs["size"], kwargs["size"]), dtype=Person)
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
                 self.pop[i, j] = Person()

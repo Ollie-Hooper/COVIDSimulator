@@ -37,7 +37,7 @@ def get_app(defaults):
         kwargs = dict(zip(input_names, args))
 
         # Set up the simulation
-        simulation = Simulation(kwargs["size"], kwargs["size"], 0.1, 0.1, 0.005)
+        simulation = Simulation(**kwargs)
         simulation.infect_randomly(kwargs["cases"])
 
         if btn == 'anim':

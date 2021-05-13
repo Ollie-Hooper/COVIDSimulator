@@ -25,10 +25,10 @@ def get_layout():
                     ]),
                     dbc.Row([
                         dbc.Col([
-                            dbc.Button("Save plot", color="secondary", id="btn-save-plot")
+                            dbc.Button("Plot", color="secondary", id="btn-plot")
                         ]),
                         dbc.Col([
-                            dbc.Input(placeholder="File name/location", id="txt-plot-fname")
+                            dbc.Input(placeholder="(Optional) File name to save plot", id="txt-plot-fname")
                         ])
                     ]),
                     dbc.Row([

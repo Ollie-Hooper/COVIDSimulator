@@ -22,7 +22,10 @@ def get_layout(defaults):
             dbc.InputGroup([
                 dbc.InputGroupAddon("Initial cases", addon_type="prepend"),
                 dbc.Input(value=defaults["cases"], type="number", min=0, step=1, id="num-cases"),
-            ])
+            ]),
+            dbc.InputGroup([
+                dbc.InputGroupAddon("Average infection length", addon_type="prepend"),
+                dbc.Input(value=defaults["length"], type="number", min=0, step=1, id="num-length"),
         ]),
         html.Br(),
         dbc.Container([

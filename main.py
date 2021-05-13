@@ -1,3 +1,5 @@
+import webbrowser
+
 from web_app.app import get_app
 
 defaults = {
@@ -25,6 +27,7 @@ defaults = {
 
 def main():
     app = get_app(defaults=defaults)
+    webbrowser.open("http://127.0.0.1:8050", new=1)
     app.run_server()
 
 

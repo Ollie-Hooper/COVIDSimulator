@@ -49,7 +49,7 @@ class Animation:
         # NOTE: needs ffmpeg installed and on PATH
         animation = FuncAnimation(self.figure, self.update, frames=range(100),
                                   init_func=self.init, blit=True, interval=300)
-        writergif = PillowWriter(fps=30)
+        writergif = PillowWriter(fps=10)
         animation.save(filename, writer=writergif)
 
     def init(self):

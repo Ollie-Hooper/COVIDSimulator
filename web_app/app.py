@@ -90,4 +90,14 @@ def get_app(defaults):
             return not is_open
         return is_open
 
+    @app.callback(
+        Output("clp-measures", "is_open"),
+        [Input("btn-measures", "n_clicks")],
+        [State("clp-measures", "is_open")],
+    )
+    def toggle_measures_collapse(n, is_open):
+        if n:
+            return not is_open
+        return is_open
+
     return app

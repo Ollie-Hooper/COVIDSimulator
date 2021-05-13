@@ -21,7 +21,7 @@ def get_layout(defaults):
             dbc.Button(
                 "Probabilities",
                 id="btn-probabilities",
-                color="secondary",
+                color="info",
             ),
             dbc.Collapse([
                 dbc.Card([
@@ -48,7 +48,7 @@ def get_layout(defaults):
             dbc.Button(
                 "Vaccinator",
                 id="btn-vaccinator",
-                color="secondary",
+                color="info",
             ),
             dbc.Collapse([
                 dbc.Card([
@@ -84,7 +84,7 @@ def get_layout(defaults):
             ]),
             dbc.Row([
                 dbc.Col([
-                    dbc.Button("Plot", color="secondary", id="btn-plot")
+                    dbc.Button("Plot", color="primary", id="btn-plot")
                 ]),
                 dbc.Col([
                     dbc.Input(placeholder="(Optional) File name to save plot", id="txt-plot-fname")

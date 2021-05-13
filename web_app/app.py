@@ -11,7 +11,7 @@ from web_app.layout import get_layout
 
 
 def get_app(defaults):
-    app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+    app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR])
     app.title = "COVID Simulator"
     app.layout = get_layout(defaults=defaults)
 

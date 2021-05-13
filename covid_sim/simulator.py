@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import numpy as np
+from numpy.random import random, randint, choice
+from random import choices
+
 
 """
 Simulator.py is used to generate the data needed to simulate our virus pandemic.

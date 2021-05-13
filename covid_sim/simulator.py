@@ -111,13 +111,21 @@ class Vaccinator:
 class Person:
 
     def __init__(self, infection_length=14):
-        self.status = SUSCEPTIBLE
+        self.status = SUSCEPTIBLE 
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
                                  p=[0.22, 0.12, 0.31, 0.22, 0.13]))
         self.set_probabilities()
 
-    # probabilities of age based on age group
+   
+"""This part of the code assigns the people in the simulation probabilities of 
+recovering from the virus, becoming infected 
+with the virus and the probabilty of them dying if they catch the virus.
+These probabilities use real world statistics based on 
+the UK and are dependent on age.
+For example, under 50's have a 70% chance of recovering from the virus,
+40% chance of becoming infected from the virus and 1% chance of dying from the virus"""
+    
     def set_probabilities(self):
         if self.age < 50:
             self.recovery_probability = 0.7 / self.infection_length

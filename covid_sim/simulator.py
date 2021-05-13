@@ -240,7 +240,7 @@ class Simulation:
         'yellow': (255, 255, 0),
     }
 
-    def __init__(self, width, height, recovery, infection, death):
+    def __init__(self, width, height):
         # Basic simulation parameters:
         self.day = 0
         self.width = width

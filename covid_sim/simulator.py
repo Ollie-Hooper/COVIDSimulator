@@ -110,7 +110,7 @@ class Vaccinator:
 # Person class
 class Person:
 
-    def __init__(self, infection_length=14):
+    def __init__(self, probabilities, infection_length=14):
         self.status = SUSCEPTIBLE
         self.infection_length = infection_length
         self.age = choice(choice([range(0, 18), range(19, 29), range(30, 49), range(50, 69), range(70, 100)],
@@ -118,31 +118,23 @@ class Person:
         self.recovery_probability = 0
         self.infection_probability = 0
         self.death_probability = 0
-        self.set_probabilities()
+        self.set_probabilities(probabilities)
 
     # probabilities of age based on age group
-    def set_probabilities(self):
+    def set_probabilities(self, probabilities):
         # Death statistics based off covid related data on mortality rates of different ages
-        if self.age < 50:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.01
-        elif self.age < 60:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.02
-        elif self.age < 70:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.04
-        elif self.age < 80:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.08
-        elif self.age <= 100:
-            self.recovery_probability = 0.7
-            self.infection_probability = 0.1
-            self.death_probability = 0.15
+        for age, p in probabilities["infection"].items():
+            if self.age < int(age):
+                self.infection_probability = p
+                break
+        for age, p in probabilities["recovery"].items():
+            if self.age < int(age):
+                self.recovery_probability = p
+                break
+        for age, p in probabilities["death"].items():
+            if self.age < int(age):
+                self.death_probability = p
+                break
         self.recovery_probability /= self.infection_length
         self.death_probability /= self.infection_length
 
@@ -252,7 +244,7 @@ class Simulation:
         self.pop = np.zeros((kwargs["size"], kwargs["size"]), dtype=Person)
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
-                self.pop[i, j] = Person()
+                self.pop[i, j] = Person(kwargs["probabilities"])
 
         self.vaccinator = Vaccinator()
 

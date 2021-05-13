@@ -27,7 +27,6 @@ def get_layout(defaults):
                     ),
                     dbc.Collapse([
                         dbc.Card([
-                            html.H5("Probabilities", className="card-title"),
                             dbc.CardBody([
                                 dbc.Row([
                                     dbc.Col([

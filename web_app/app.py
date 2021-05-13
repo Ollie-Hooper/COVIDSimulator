@@ -23,7 +23,11 @@ def get_app(defaults):
          State('txt-plot-fname', 'value'),
          State('num-size', 'value'),
          State('num-duration', 'value'),
-         State('num-cases', 'value')]
+         State('num-cases', 'value'),
+         *[State(f'num-{prob}-{age}', 'value') for prob, probs in
+           defaults["probabilities"].items() for age in
+           probs.keys()],
+         ]
     )
     def run(btn_anim, btn_plot, anim_fname, plot_fname, *args):
         ctx = dash.callback_context

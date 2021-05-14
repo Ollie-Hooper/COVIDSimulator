@@ -9,6 +9,7 @@ class Animation:
     form of visual diagrams. These include grid animations and line animations. 
 
     """
+
     def __init__(self, simulation, duration):
         """Sets out the framework for the animation to take place in"""
         self.simulation = simulation

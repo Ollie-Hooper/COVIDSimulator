@@ -3,7 +3,6 @@ import numpy as np
 from numpy.random import random, randint, choice
 from random import choices
 
-
 """
 Simulator.py is used to generate the data needed to simulate our virus pandemic.
 This works by generating a matrix of person objects, each with their own attributes on how the virus will affect them.
@@ -26,7 +25,6 @@ VACCINATED = 4
 
 # Vaccination class
 class Vaccinator:
-
     """
     The Vaccinator class is used to model our vaccine rollout.
     It begins at a specified date during the epidemic, with the roll out rate developing over time
@@ -67,6 +65,7 @@ class Person:
     The Person class creates each individual object to be added to the population
     Each is assigned to an age range, which determines their infection, recovery and death probabilities
     """
+
     def __init__(self, probabilities, infection_length=14):
         self.status = SUSCEPTIBLE
         self.infection_length = infection_length
@@ -106,6 +105,7 @@ class Measure:
     These are also modeled by changing probabilities.
     However, these will change all persons attributes for the set number of days the measure will last for.
     """
+
     def __init__(self, start_dates=(25,), end_dates=(75,), multiplier=0.5, probability_attr='infection_probability'):
         self.start_dates = start_dates
         self.end_dates = end_dates
@@ -136,6 +136,7 @@ class Measure:
                 new_probability = old_probability / self.multiplier
                 setattr(pop[i, j], self.probability_attr, new_probability)
         return pop
+
 
 # Series of subclasses of the Measure Class, representing different epidemic scenarios
 class Lockdown(Measure):
@@ -247,7 +248,7 @@ class Simulation:
         self.day += 1
 
     def set_new_status(self, pop, i, j):
-        #Compute new status for person at i, j in the grid
+        # Compute new status for person at i, j in the grid
         person = pop[i, j]
 
         # Update infected person
@@ -264,7 +265,7 @@ class Simulation:
                 person.set_status(self.INFECTED)
 
     def num_infected_around(self, pop, i, j):
-        #Count the number of infected people around person i, j
+        # Count the number of infected people around person i, j
         # ivals and jvals are the coordinates of neighbours around i, j
         ivals = range(max(i - 1, 0), min(i + 2, self.width))
         jvals = range(max(j - 1, 0), min(j + 2, self.height))
@@ -278,7 +279,7 @@ class Simulation:
         return number
 
     def get_count_status(self):
-        #Dictionary giving counts of people's status
+        # Dictionary giving counts of people's status
 
         simgrid = self.get_status_grid()
         total = self.width * self.height
@@ -289,7 +290,8 @@ class Simulation:
 
     def get_rgb_matrix(self):
         rgb_matrix = np.zeros((self.width, self.height, 3), int)
-        code_to_status = {v: k for k, v in self.STATUSES.items()} # Gets rbg data from previously declared colour scheme
+        code_to_status = {v: k for k, v in
+                          self.STATUSES.items()}  # Gets rbg data from previously declared colour scheme
         for i in range(len(self.pop)):
             for j in range(len(self.pop[i])):
                 person = self.pop[i, j]
@@ -298,7 +300,7 @@ class Simulation:
                 colour_rgb = self.COLOURMAP_RGB[colour_name]
                 age_adjusted_colour_rgb = [c - age if c != 0 else 0 for c in colour_rgb]
                 rgb_matrix[i, j] = age_adjusted_colour_rgb
-                #Prodcues a darker shade for older ages by taking their age value away from their rgb value
+                # Prodcues a darker shade for older ages by taking their age value away from their rgb value
         return rgb_matrix
 
     def get_status_grid(self):

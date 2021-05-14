@@ -26,7 +26,8 @@ Run the following command in your git bash terminal to activate the web-app:
 Once the web-app has appeared in your browser, enter the desired values into the input boxes.
 To run the animation, click the run/save animation button.
 To view the plot change over time as a series of images, click the plot button.
-To save either of these, enter a name into the appropriate text box, followed by the buttons. 
+To save either of these, enter a name into the appropriate text box, followed by the buttons.
+To check that the app is generating these animations/plots you can check that the tab name is showing "Updating...".
 
 ## Quick Example
 

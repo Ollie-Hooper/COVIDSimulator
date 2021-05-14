@@ -212,6 +212,8 @@ class Simulation:
             for j in range(len(self.pop[i])):
                 self.pop[i, j] = Person(kwargs["probabilities"], kwargs["length"])
 
+        self.age_grid = self.get_age_grid()
+
         self.vaccinator = Vaccinator(**kwargs["vaccinator"])
         self.measures = [Lockdown(**kwargs["measures"]["Lockdown"]),
                          SocialDistancing(**kwargs["measures"]["Social Distancing"]),
@@ -305,3 +307,10 @@ class Simulation:
             for j in range(len(state[i])):
                 state[i, j] = self.pop[i, j].status
         return state
+
+    def get_age_grid(self):
+        age = np.zeros(self.pop.shape)
+        for i in range(len(age)):
+            for j in range(len(age[i])):
+                age[i, j] = self.pop[i, j].age
+        return age

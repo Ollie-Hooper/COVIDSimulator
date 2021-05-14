@@ -144,13 +144,11 @@ def plot_simulation(simulation, duration):
 def plot_ages(simulation):
     """Produces a histogram of the age distribution in the simulation"""
     age_grid = simulation.age_grid
-    #a, c = np.unique(age_grid, return_counts=True)
-    #age_counts = np.asarray((a, c))
 
     n_bins = 100
     fig, axs = plt.subplots(1, 1)
     axs.hist(age_grid.flatten(), bins=n_bins)
-
-    #fig = plt.hist(age_counts)
+    axs.set_xlabel("Age")
+    axs.set_ylabel("Count")
 
     return fig

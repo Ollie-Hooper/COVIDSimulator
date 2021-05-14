@@ -17,7 +17,7 @@ def get_app(defaults):
 
     app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR])
     app.title = "COVID Simulator"
-    app.layout = get_layout(defaults=defaults)  # Get layout from layout.py
+    app.layout = get_layout(app=app, defaults=defaults)  # Get layout from layout.py
 
     @app.callback(
         [Output('lbl-status', 'children'),  # Output to status label to know when plot/animation generation has finished

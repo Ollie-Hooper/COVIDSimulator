@@ -3,7 +3,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 
 
-def get_layout(defaults):
+def get_layout(app, defaults):
     """
     Function which returns the app layout - layout is constructed from various elements to form an interactive web app
     """
@@ -162,6 +162,10 @@ def get_layout(defaults):
             html.Img(id="img-plot"),
         ]),
         dbc.Container([
-            dcc.Markdown(open('README.md', 'r').read())
+            dcc.Markdown(open('README.md', 'r').read().replace(
+                "https://github.com/Ollie-Hooper/COVIDSimulator/blob/master/web_app/assets/parameters.png?raw=true",
+                app.get_asset_url("parameters.png")).replace(
+                "https://github.com/Ollie-Hooper/COVIDSimulator/blob/master/web_app/assets/results.png?raw=true",
+                app.get_asset_url("results.png")))
         ])
     ])

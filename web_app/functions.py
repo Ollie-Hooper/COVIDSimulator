@@ -13,7 +13,7 @@ def unflatten_dict(d):
     nested_d = {}
     for k, v in d.items():
         split_key(k, v, nested_d)
-    return n_d
+    return nested_d
 
 
 def split_key(k, v, nested_d):

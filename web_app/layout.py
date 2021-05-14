@@ -4,6 +4,9 @@ import dash_bootstrap_components as dbc
 
 
 def get_layout(defaults):
+    """
+    Function which returns the app layout - layout is constructed from various elements to form an interactive web app
+    """
     return dbc.Container([
         dbc.Container([
             html.H1("FCP - Simulating COVID-19"),

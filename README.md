@@ -1,4 +1,4 @@
-# Covid Simulator
+# FCP - Simulating COVID-19
 
 ## Authors 
 Abbie Backers, Adam Morris, Josh Smith, Ollie Hooper

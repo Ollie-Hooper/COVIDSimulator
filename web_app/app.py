@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input, State
 from dash.exceptions import PreventUpdate
 
-from covid_sim.animation import Animation, plot_simulation
+from covid_sim.animation import Animation, plot_simulation, plot_ages
 from covid_sim.simulator import Simulation
 from web_app.functions import get_bottom_lvl_keys, unflatten_dict, parse_measures
 from web_app.layout import get_layout
@@ -20,11 +20,13 @@ def get_app(defaults):
     @app.callback(
         [Output('lbl-status', 'children'),
          Output('img-animation', 'src'),
-         Output('img-plot', 'src')],
+         Output('img-plot', 'src'),
+         Output('img-age', 'src')],
         [Input('btn-anim', 'n_clicks'),
          Input('btn-plot', 'n_clicks')],
         [State('img-animation', 'src'),
          State('img-plot', 'src'),
+         State('img-age', 'src'),
          State('txt-anim-fname', 'value'),
          State('txt-plot-fname', 'value'),
          State('num-size', 'value'),
@@ -40,7 +42,7 @@ def get_app(defaults):
            values.keys()],
          ]
     )
-    def run(btn_anim, btn_plot, anim_src, plot_src, anim_fname, plot_fname, *args):
+    def run(btn_anim, btn_plot, anim_src, plot_src, age_src, anim_fname, plot_fname, *args):
         ctx = dash.callback_context
 
         if not ctx.triggered:
@@ -57,31 +59,37 @@ def get_app(defaults):
         simulation = Simulation(**kwargs)
         simulation.infect_randomly(kwargs["cases"])
 
+        if not os.path.exists("web_app/assets"):
+            os.mkdir("web_app/assets")
+
+        fig_age = plot_ages(simulation)
+        fig_age.savefig("web_app/assets/age.png")
+
         if btn == 'anim':
             animation = Animation(simulation, duration=kwargs["duration"])
 
             if anim_fname is None:
-                if not os.path.exists("web_app/assets"):
-                    os.mkdir("web_app/assets")
                 animation.save("web_app/assets/anim.gif")
-                encoded_gif = base64.b64encode(open("web_app/assets/anim.gif", "rb").read())
-                return "Finished generating animation", f"data:image/png;base64,{encoded_gif.decode()}", plot_src
+                encoded_anim = base64.b64encode(open("web_app/assets/anim.gif", "rb").read())
+                encoded_age = base64.b64encode(open("web_app/assets/age.png", "rb").read())
+                return "Finished generating animation", f"data:image/png;base64,{encoded_anim.decode()}", plot_src, \
+                       f"data:image/png;base64,{encoded_age.decode()}"
             else:
                 animation.save(anim_fname)
-                return f"Finished saving animation in {anim_fname}", anim_src, plot_src
+                return f"Finished saving animation in {anim_fname}", anim_src, plot_src, age_src
 
         elif btn == 'plot':
-            fig = plot_simulation(simulation, 100)
+            fig_simulation = plot_simulation(simulation, 100)
 
             if plot_fname is None:
-                if not os.path.exists("web_app/assets"):
-                    os.mkdir("web_app/assets")
-                fig.savefig("web_app/assets/plot.png")
-                encoded_png = base64.b64encode(open("web_app/assets/plot.png", "rb").read())
-                return "Finished generating plot", anim_src, f"data:image/png;base64,{encoded_png.decode()}"
+                fig_simulation.savefig("web_app/assets/plot.png")
+                encoded_plot = base64.b64encode(open("web_app/assets/plot.png", "rb").read())
+                encoded_age = base64.b64encode(open("web_app/assets/age.png", "rb").read())
+                return "Finished generating plot", anim_src, f"data:image/png;base64,{encoded_plot.decode()}", \
+                       f"data:image/png;base64,{encoded_age.decode()}"
             else:
                 fig.savefig(plot_fname)
-                return f"Finished saving plot in {plot_fname}"
+                return f"Finished saving plot in {plot_fname}", anim_src, plot_src, age_src
 
     @app.callback(
         Output("clp-probabilities", "is_open"),

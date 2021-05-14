@@ -4,6 +4,9 @@ import dash_bootstrap_components as dbc
 
 
 def get_layout(defaults):
+    """
+    Function which returns the app layout - layout is constructed from various elements to form an interactive web app
+    """
     return dbc.Container([
         dbc.Container([
             html.H1("FCP - Simulating COVID-19"),
@@ -134,7 +137,8 @@ def get_layout(defaults):
                     dbc.Button("Run/Save animation", color="primary", id="btn-anim")
                 ]),
                 dbc.Col([
-                    dbc.Input(placeholder="(Optional) File name to save animation", id="txt-anim-fname")
+                    dbc.Input(placeholder="(Optional) File name to save animation - must end in .gif",
+                              id="txt-anim-fname")
                 ])
             ]),
             dbc.Row([
@@ -142,7 +146,7 @@ def get_layout(defaults):
                     dbc.Button("Plot", color="primary", id="btn-plot")
                 ]),
                 dbc.Col([
-                    dbc.Input(placeholder="(Optional) File name to save plot", id="txt-plot-fname")
+                    dbc.Input(placeholder="(Optional) File name to save plot - must end in .png", id="txt-plot-fname")
                 ])
             ]),
             dbc.Row([
@@ -154,6 +158,7 @@ def get_layout(defaults):
         html.Br(),
         dbc.Container([
             html.Img(id="img-animation"),
+            html.Img(id="img-age"),
             html.Img(id="img-plot"),
         ]),
         dbc.Container([

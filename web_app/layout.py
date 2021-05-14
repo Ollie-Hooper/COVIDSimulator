@@ -154,6 +154,7 @@ def get_layout(defaults):
         html.Br(),
         dbc.Container([
             html.Img(id="img-animation"),
+            html.Img(id="img-age"),
             html.Img(id="img-plot"),
         ]),
         dbc.Container([

@@ -2,4 +2,4 @@ __pycache__/
 .idea/
 .spyproject/
 *.gif
-*.png
+web_app/assets/*.png

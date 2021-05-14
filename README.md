@@ -36,9 +36,13 @@ To check that the app is generating these animations/plots you can check that th
 ## Quick Example
 
 Opening the web-app for the first time you will see the following:
-![Quick Example -  Default Parameters](https://im6.ezgif.com/tmp/ezgif-6-bb60b8f9bfe7.png)
+
+![Quick Example -  Default Parameters](https://github.com/Ollie-Hooper/COVIDSimulator/blob/master/parameters.png)
+
 Clicking the Run/Save animation and the plot button, with the given default parameters, we produce the following output:
-![Quick Example - Outputs](https://im6.ezgif.com/tmp/ezgif-6-1abd23de6081.png)
+
+![Quick Example - Outputs](https://github.com/Ollie-Hooper/COVIDSimulator/blob/master/results.png)
+
 These outputs are displayed clearly below the inputs section of the web-app. The animation will keep repeating until the parameters are changed and the animation re-loaded, or the web-app is closed.
 
 ## Features

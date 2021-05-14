@@ -31,10 +31,9 @@ To save either of these, enter a name into the appropriate text box, followed by
 ## Quick Example
 
 Opening the web-app for the first time you will see the following:
-
-![Quick Example - Default Parameters](https://db3pap004files.storage.live.com/y4pzmuiaJU24LxWGfT8Fvg0qYYKFXwr0rbYY-8OaZpHqfT8_AOBE9xrNn0xLDvkwlpkTGVgfKbdkFn5YxnW1VYN9UkjtcsFnIVEpU7Zbaoni2VAQt6RaAMma12Gl4evueFkIgxrYfwEHWnb8QDwjLFwfmpCkUambABlxZVvHgAjZDNLmVq06DfzXySfLR90AUnsKSSeYPPAkxZmafhVLRAyNds-qId2legD9_tclj0GqVs/2021-05-13%20%282%29.png?psid=1&width=1819&height=929)
+![Quick Example -  Default Parameters](https://im6.ezgif.com/tmp/ezgif-6-bb60b8f9bfe7.png)
 Clicking the Run/Save animation and the plot button, with the given default parameters, we produce the following output:
-![Quick Example - Outputs](https://db3pap004files.storage.live.com/y4p6PtHNRQRSvzRs7kWv0I7lmy8fH6vL1VRWBQxDRvv3MmuSiYX78rf0MQR3myqbrWT_M8aRulg3McINgemP_XUPD-Ooaq5zAEl_iyqiTCVuIYhZPVI6DbXfWEmX568zPSNn8JyEN9gdCgkLZhNrrhiNHOLYhJrAi9PkHjziuPKyh1V40MfwHxvYARUkHh20-UH14KWhZt068Zy2VjT4kgu0YjWc7y_m1QwJQdqYdWO2DM/2021-05-13%20%285%29.png?psid=1&width=1786&height=929)
+![Quick Example - Outputs](https://im6.ezgif.com/tmp/ezgif-6-1abd23de6081.png)
 These outputs are displayed clearly below the inputs section of the web-app. The animation will keep repeating until the parameters are changed and the animation re-loaded, or the web-app is closed.
 
 ## Features
